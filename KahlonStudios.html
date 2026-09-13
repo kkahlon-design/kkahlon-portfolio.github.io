@@ -1,0 +1,225 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Kahlon Studios</title>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:400,700&display=swap">
+    <link rel="stylesheet" href="style.css">
+    <link rel="icon" type="image/svg+xml" href="favicon.svg">
+    <link rel="apple-touch-icon" href="favicon.svg">
+
+<!-- Desktop navbar Contact hover handled in style.css -->
+</head>
+
+<body>
+
+<!-- Navbar -->
+<nav class="navbar">
+  <a href="KahlonStudios.html" class="logo">KARUN KAHLON</a>
+  <div class="nav-links">
+    <a href="https://www.linkedin.com/in/karun-kahlon-783655301/" class="text-link" target="_blank" rel="noopener noreferrer">LinkedIn</a>
+    <a href="Projects.html" class="button-link">Projects</a>
+  </div>
+  <button class="hamburger" id="hamburgerBtn" aria-label="Open menu" aria-controls="mobileMenu" aria-expanded="false">
+    <span></span>
+    <span></span>
+    <span></span>
+  </button>
+</nav>
+
+<!-- Hamburger menu -->
+<div class="menu-overlay" id="menuOverlay" aria-hidden="true">
+  <aside class="mobile-menu" id="mobileMenu" aria-label="Mobile menu">
+    <div class="menu-header">
+      <span class="menu-header-label">Menu</span>
+      <button class="menu-close" id="closeMenuBtn" aria-label="Close menu">×</button>
+    </div>
+    <a class="mobile-link mobile-link--primary" href="Projects.html">Projects</a>
+    <a class="mobile-link" href="https://www.linkedin.com/in/karun-kahlon-783655301/" target="_blank" rel="noopener noreferrer">LinkedIn</a>
+  </aside>
+</div>
+
+<!-- landing Section -->
+<section class="landing" id="hero">
+
+  <div class="landing-image">
+    <div class="memoji-orbit" id="memojiOrbit">
+      <svg class="orbit-ring" id="orbitSvg" viewBox="0 0 390 390" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+        <defs>
+          <path id="orbitPath" d="M 195,195 m -155,0 a 155,155 0 1,1 310,0 a 155,155 0 1,1 -310,0"/>
+        </defs>
+        <text class="orbit-text">
+          <textPath id="orbitTextPath" href="#orbitPath" startOffset="0%">UX Designer · Problem Solver · Driven by Purpose · Gamer · </textPath>
+        </text>
+      </svg>
+      <img src="Images/LandingPage/memoji_wave_1600.webp" alt="My Memoji" class="memoji">
+    </div>
+  </div>
+
+  <div class="landing-text">
+    <p class="landing-greeting">Hey, I'm Karun...</p>
+    <h1 class="landing-h1">I design for people,<br>not just screens.</h1>
+    <div class="landing-btns">
+      <a href="https://www.linkedin.com/in/karun-kahlon-783655301/" class="landing-LinkedIn-btn" target="_blank" rel="noopener noreferrer">Get in Touch</a>
+      <a href="Projects.html" class="landing-projects-btn">View Projects</a>
+    </div>
+  </div>
+
+</section>
+
+<!-- Featured Projects Preview -->
+<section class="featured-projects">
+  <div class="featured-projects-container">
+
+    <div class="fp-header">
+      <span class="fp-label">Featured Work</span>
+      <a href="Projects.html" class="fp-all-link">View all projects →</a>
+    </div>
+
+    <div class="fp-grid">
+
+      <!-- SfD -->
+      <a href="sfd-project.html" class="fp-card fp-card--primary" aria-label="View SfD Website project">
+        <div class="fp-card-image">
+          <img src="Images/LandingPage/SFD Thumbnail.png" alt="SfD Website project thumbnail">
+        </div>
+        <div class="fp-card-body">
+          <div class="fp-card-meta">
+            <span class="fp-card-index">01</span>
+            <span class="fp-card-title">SfD Website</span>
+          </div>
+          <p class="fp-card-desc">End-to-end redesign solving UX inefficiencies to improve SEO and drive growth.</p>
+          <div class="fp-card-duration">
+            <svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+            <span>June 2025 &nbsp;·&nbsp; 2 Weeks</span>
+          </div>
+          <span class="fp-card-cta">View Project →</span>
+        </div>
+      </a>
+
+      <!-- UX Diploma -->
+      <a href="ux-diploma.html" class="fp-card fp-card--primary" aria-label="View UX Diploma project">
+        <div class="fp-card-image">
+          <img src="Images/LandingPage/UX Diploma Thumbnail.png" alt="UX Diploma project thumbnail">
+        </div>
+        <div class="fp-card-body">
+          <div class="fp-card-meta">
+            <span class="fp-card-index">02</span>
+            <span class="fp-card-title">Diploma Project</span>
+          </div>
+          <p class="fp-card-desc">Full UX Design Institute diploma — research, analysis, wireframing, prototyping and redesign.</p>
+          <div class="fp-card-duration">
+            <svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+            <span>Sep 2023 – Jun 2024 &nbsp;·&nbsp; 9 Months</span>
+          </div>
+          <span class="fp-card-cta">View Project →</span>
+        </div>
+      </a>
+
+    </div>
+
+  </div>
+</section>
+
+<!-- Design Philosophy Section -->
+<section class="design-philosophy" id="dp-container">
+  <div class="dp-wall-header">
+    <h2 class="design-philosophy-title">Design Philosophy</h2>
+  </div>
+
+  <div class="dp-wall">
+
+    <div class="dp-band">
+      <span class="dp-band-index">01 / Approach</span>
+      <p class="dp-band-statement">Human-centred from the start. I design for the person using it, not the person presenting it.</p>
+    </div>
+
+    <div class="dp-band">
+      <span class="dp-band-index">02 / Process</span>
+      <p class="dp-band-statement">Empathise. Define. Ideate. Prototype. Test. Not a checklist — a mindset.</p>
+    </div>
+
+    <div class="dp-band">
+      <span class="dp-band-index">03 / Craft</span>
+      <p class="dp-band-statement">Inspired by Dieter Rams and Apple's attention to detail — work that feels effortless to use, but is carefully considered in every detail.</p>
+    </div>
+
+    <div class="dp-band">
+      <span class="dp-band-index">04 / Iterate</span>
+      <p class="dp-band-statement">Nothing is ever finished. There is always something to improve, refine, or rethink. That's not a flaw in the process — it is the process.</p>
+    </div>
+
+  </div>
+</section>
+
+<!-- About Me Section -->
+<section class="about">
+  <div class="about-container">
+    <h2 class="about-title">About Me</h2>
+
+    <div class="about-carousel" id="aboutCarousel">
+      <div class="about-track" id="aboutTrack">
+
+        <div class="about-card">
+          <img src="Images/LandingPage/Snowdon.jpg" alt="Hiking on Snowdon" class="about-card-img">
+          <div class="about-card-body">
+            <span class="about-card-label">
+              <span class="about-card-label-dash"></span>
+              Active by Nature
+            </span>
+            <p class="about-card-text">I like to keep a balance between staying active and spending time outdoors. This could be a football game, a gym session, or a long walk in nature. It's something that helps clear my mind, stay disciplined, and keep a positive mindset.</p>
+          </div>
+        </div>
+
+        <div class="about-card">
+          <img src="Images/LandingPage/Spider-Man.JPG" alt="Games, Tech & Cinema" class="about-card-img">
+          <div class="about-card-body">
+            <span class="about-card-label">
+              <span class="about-card-label-dash"></span>
+              Games, Tech &amp; Cinema
+            </span>
+            <p class="about-card-text">I've always been curious about what makes digital experiences engaging and memorable. Whether that's trying out new products, getting immersed in games, or appreciating the detail in films.</p>
+          </div>
+        </div>
+
+        <div class="about-card">
+          <img src="Images/LandingPage/Antalya arch.png" alt="Culture & Travel" class="about-card-img">
+          <div class="about-card-body">
+            <span class="about-card-label">
+              <span class="about-card-label-dash"></span>
+              Culture &amp; Curiosity
+            </span>
+            <p class="about-card-text">I'm fascinated by culture and how it shapes our thinking. I love learning about different cultures and perspectives, and I believe that understanding these differences is key to creating inclusive and meaningful designs.</p>
+          </div>
+        </div>
+
+      </div>
+
+      <div class="about-dots" id="aboutDots" aria-label="Carousel position"></div>
+    </div>
+  </div>
+</section>
+
+<footer class="footer">
+  <div class="footer-content">
+    <a href="KahlonStudios.html" class="logo">KARUN KAHLON</a>
+    
+    <a href="https://www.linkedin.com/in/karun-kahlon-783655301/" 
+       class="linkedin-link" 
+       target="_blank" 
+       aria-label="LinkedIn Profile">
+      <svg xmlns="http://www.w3.org/2000/svg" 
+           width="24" 
+           height="24" 
+           viewBox="0 0 24 24" 
+           fill="white">
+        <path d="M4.98 3.5C4.98 4.88 3.86 6 2.48 6S0 4.88 0 3.5 1.12 1 2.48 1s2.5 1.12 2.5 2.5zM0 8h5v16H0V8zm7.5 0h4.78v2.2h.07c.67-1.27 2.3-2.6 4.73-2.6 5.06 0 6 3.33 6 7.66V24h-5v-6.88c0-1.64-.03-3.75-2.28-3.75-2.29 0-2.64 1.79-2.64 3.63V24h-5V8z"/>
+      </svg>
+    </a>
+  </div>
+</footer>
+
+<script src="script.js"></script>
+</body>
+</html>

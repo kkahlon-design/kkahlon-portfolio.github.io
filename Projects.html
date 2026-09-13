@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Kahlon Studios - Projects</title>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:400,700&display=swap">
+    <link rel="stylesheet" href="style.css">
+    <link rel="icon" type="image/svg+xml" href="favicon.svg">
+    <link rel="apple-touch-icon" href="favicon.svg">
+
+<!-- Desktop navbar Contact hover handled in style.css -->
+</head>
+
+<body>
+
+<!-- Navbar -->
+<nav class="navbar">
+  <a href="KahlonStudios.html" class="logo">KARUN KAHLON</a>
+  <div class="nav-links">
+    <a href="https://www.linkedin.com/in/karun-kahlon-783655301/" class="text-link" target="_blank" rel="noopener noreferrer">LinkedIn</a>
+    <a href="Projects.html" class="button-link">Projects</a>
+  </div>
+  <button class="hamburger" id="hamburgerBtn" aria-label="Open menu" aria-controls="mobileMenu" aria-expanded="false">
+    <span></span>
+    <span></span>
+    <span></span>
+  </button>
+</nav>
+
+<!-- Hamburger menu -->
+<div class="menu-overlay" id="menuOverlay" aria-hidden="true">
+  <aside class="mobile-menu" id="mobileMenu" aria-label="Mobile menu">
+    <div class="menu-header">
+      <span class="menu-header-label">Menu</span>
+      <button class="menu-close" id="closeMenuBtn" aria-label="Close menu">×</button>
+    </div>
+    <a class="mobile-link mobile-link--primary" href="Projects.html">Projects</a>
+ <a class="mobile-link" href="https://www.linkedin.com/in/karun-kahlon-783655301/" target="_blank" rel="noopener noreferrer">LinkedIn</a>
+  </aside>
+</div>
+
+<!-- Projects Header -->
+<header class="projects-header">
+  <div class="projects-header-inner">
+    <p class="projects-header-label">Work</p>
+    <h1 class="projects-header-title">Projects</h1>
+    <p class="projects-header-sub">A collection of UX and product design work.</p>
+  </div>
+</header>
+
+<!-- Projects Section -->
+<section class="project-section">
+
+  <!-- Project 1 -->
+  <div class="project-preview">
+
+    <div class="project-thumbnail">
+      <img src="Images/LandingPage/SFD Thumbnail.png" alt="SfD Website Project">
+    </div>
+
+    <div class="project-info">
+      <div class="project-meta">
+        <span class="project-index">01</span>
+        <span class="project-title">SfD Website</span>
+      </div>
+      <h2 class="project-description">My first project for a corporate client.</h2>
+      <div class="project-tags">
+        <span class="project-duration">
+          <svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+          June 2025 &nbsp;·&nbsp; 2 Weeks
+        </span>
+      </div>
+      <a href="sfd-project.html" class="project-button">
+        View Project
+      </a>
+    </div>
+
+  </div>
+
+  <!-- Project 2 -->
+  <div class="project-preview">
+
+    <div class="project-thumbnail">
+      <img src="Images/UXDIProject/P2 Homepage.png" alt="UX Diploma Project">
+    </div>
+
+    <div class="project-info">
+      <div class="project-meta">
+        <span class="project-index">02</span>
+        <span class="project-title">Diploma Project</span>
+      </div>
+      <h2 class="project-description">UX Design Institute Diploma Project.</h2>
+      <div class="project-tags">
+        <span class="project-duration">
+          <svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+          Sep 2023 – Jun 2024 &nbsp;·&nbsp; 9 Months
+        </span>
+      </div>
+      <a href="ux-diploma.html" class="project-button">
+        View Project
+      </a>
+    </div>
+
+  </div>
+
+</section>
+
+<!-- Footer -->
+<footer class="footer">
+  <div class="footer-content">
+    <a href="KahlonStudios.html" class="logo">KARUN KAHLON</a>
+    
+    <a href="https://www.linkedin.com/in/karun-kahlon-783655301/" 
+       class="linkedin-link" 
+       target="_blank" 
+       aria-label="LinkedIn Profile">
+      <svg xmlns="http://www.w3.org/2000/svg" 
+           width="24" 
+           height="24" 
+           viewBox="0 0 24 24" 
+           fill="white">
+        <path d="M4.98 3.5C4.98 4.88 3.86 6 2.48 6S0 4.88 0 3.5 1.12 1 2.48 1s2.5 1.12 2.5 2.5zM0 8h5v16H0V8zm7.5 0h4.78v2.2h.07c.67-1.27 2.3-2.6 4.73-2.6 5.06 0 6 3.33 6 7.66V24h-5v-6.88c0-1.64-.03-3.75-2.28-3.75-2.29 0-2.64 1.79-2.64 3.63V24h-5V8z"/>
+      </svg>
+    </a>
+  </div>
+</footer>
+
+<script src="script.js"></script>
+</body>
+</html>
