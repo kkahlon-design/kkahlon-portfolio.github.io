@@ -1,441 +1,282 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en-GB">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Kahlon Studios - UX Diploma</title>
-    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:400,700&display=swap">
-    <link rel="stylesheet" href="style.css">
-    <link rel="icon" type="image/svg+xml" href="favicon.svg">
-    <link rel="apple-touch-icon" href="favicon.svg">
-
-<!-- Desktop navbar Contact hover handled in style.css -->
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <title>Airline booking redesign — Karun Kahlon</title>
+  <meta name="description" content="Case study: UX Design Institute diploma project redesigning an airline booking flow, from research to high-fidelity prototype.">
+  <meta name="theme-color" content="#000000">
+  <meta property="og:title" content="Airline booking redesign — Karun Kahlon">
+  <meta property="og:description" content="Case study: UX Design Institute diploma project redesigning an airline booking flow, from research to high-fidelity prototype.">
+  <link rel="icon" type="image/svg+xml" href="favicon.svg">
+  <link rel="apple-touch-icon" href="favicon.svg">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Schibsted+Grotesk:wght@400..900&display=swap">
+  <link rel="stylesheet" href="assets/css/main.css">
+  <script>
+    /* Theme before paint + missing-image fallbacks (runs before any image loads) */
+    (function () {
+      var r = document.documentElement, t;
+      r.classList.add("js");
+      try { t = localStorage.getItem("kk-theme"); } catch (e) {}
+      if (!t) t = matchMedia("(prefers-color-scheme: light)").matches ? "light" : "dark";
+      r.dataset.theme = t;
+      window.__kkQueue = [];
+      document.addEventListener("error", function (e) {
+        var i = e.target;
+        if (!i || i.tagName !== "IMG") return;
+        var f = i.getAttribute("data-fallback");
+        if (f && !i.dataset.fb) { i.dataset.fb = "1"; i.src = f; return; }
+        window.__kkMissing ? window.__kkMissing(i) : window.__kkQueue.push(i);
+      }, true);
+    })();
+  </script>
 </head>
+<body class="page-case">
+<a class="skip-link" href="#main">Skip to content</a>
 
-<body class="sfd-project-page">
-
-<!-- Navbar -->
-<nav class="navbar">
-  <a href="index.html" class="logo">KARUN KAHLON</a>
-  <div class="nav-links">
-    <a href="https://www.linkedin.com/in/karun-kahlon-783655301/" class="text-link" target="_blank" rel="noopener noreferrer">LinkedIn</a>
-    <a href="Projects.html" class="button-link">Projects</a>
+<header class="nav">
+  <div class="wrap nav__inner">
+    <a class="nav__brand" href="index.html" aria-label="Karun Kahlon, home"><span class="nav__brand-mark" aria-hidden="true"></span>Karun Kahlon</a>
+    <nav class="nav__links" aria-label="Main">
+      <a class="nav__link" href="Projects.html" aria-current="page">Work</a>
+      <a class="nav__link" href="about.html">About</a>
+      <a class="nav__link" href="https://www.linkedin.com/in/karun-kahlon-783655301/" target="_blank" rel="noopener noreferrer">LinkedIn <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 17 17 7M9 7h8v8"/></svg></a>
+      <button class="theme-toggle" type="button" data-theme-toggle aria-label="Switch theme">
+          <svg viewBox="0 0 24 24" aria-hidden="true">
+            <mask id="moon-cut"><rect width="24" height="24" fill="#fff"/><circle class="moon-mask" cx="30" cy="-6" r="7" fill="#000"/></mask>
+            <circle class="sun-core" cx="12" cy="12" r="5" fill="currentColor" mask="url(#moon-cut)"/>
+            <g class="sun-rays" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M12 1.5v2M12 20.5v2M1.5 12h2M20.5 12h2M4.6 4.6 6 6M18 18l1.4 1.4M4.6 19.4 6 18M18 6l1.4-1.4"/></g>
+          </svg>
+      </button>
+      <button class="menu-btn nav__menu-btn" type="button" aria-controls="menu" aria-expanded="false" aria-label="Open menu"><span></span></button>
+    </nav>
   </div>
-  <button class="hamburger" id="hamburgerBtn" aria-label="Open menu" aria-controls="mobileMenu" aria-expanded="false">
-    <span></span>
-    <span></span>
-    <span></span>
-  </button>
-</nav>
+</header>
 
-<!-- Hamburger menu -->
-<div class="menu-overlay" id="menuOverlay" aria-hidden="true">
-  <aside class="mobile-menu" id="mobileMenu" aria-label="Mobile menu">
-    <div class="menu-header">
-      <span class="menu-header-label">Menu</span>
-      <button class="menu-close" id="closeMenuBtn" aria-label="Close menu">×</button>
-    </div>
-    <a class="mobile-link mobile-link--primary" href="Projects.html">Projects</a>
-    <a class="mobile-link" href="https://www.linkedin.com/in/karun-kahlon-783655301/" target="_blank" rel="noopener noreferrer">LinkedIn</a>
-  </aside>
+<div class="menu" id="menu" aria-hidden="true">
+  <nav class="menu__links" aria-label="Mobile">
+    <a class="menu__link" href="Projects.html" aria-current="page">Work</a>
+    <a class="menu__link" href="about.html">About</a>
+    <a class="menu__link" href="https://www.linkedin.com/in/karun-kahlon-783655301/" target="_blank" rel="noopener noreferrer">LinkedIn</a>
+  </nav>
+  <p class="menu__foot">UX designer, UK. It's <span data-clock>--:--</span> here.</p>
 </div>
+<main id="main">
 
+  <div class="progress" aria-hidden="true"><span></span></div>
 
-<!-- Project Header -->
-<section class="project-header">
-  <div class="project-header-inner">
-
-    <!-- Back Button -->
-    <a href="Projects.html" class="back-button" aria-label="Go back">
-      Back
-    </a>
-
-    <!-- Title -->
-    <p class="project-title">Diploma Project</p>
-    <h1 class="project-description">UX Design Institute</h1>
-    <!-- Responsive Image Container -->
-    <div class="project-thumbnail-container">
-      <img src="Images/UXDIProject/P2 Homepage.png" alt="KK Airways Redesign" class="project-thumbnail">
-    </div>
-
-  </div>
-</section>
-
-<!-- Project Body -->
-<section class="project-body-section">
-    <div class="project-body-layout">
-        <div class="project-body-shell">
-            <div class="project-body-content">
-
-        <!-- Overview -->
-        <section class="project-content-section" id="overview">
-          <div class="project-overview-grid">
-            <div class="project-overview-details">
-              <div class="overview-block" id="my-role">
-                <h2 class="overview-heading">My Role</h2>
-                <p class="overview-text">User Research, Research Analysis, Wireframing, Prototyping</p>
-              </div>
-
-              <div class="overview-block">
-                <h2 class="overview-heading">Duration</h2>
-                <p class="overview-text">September 2023 - June 2024</p>
-              </div>
-            </div>
-
-          </div>
-        </section>
-
-        <!-- Task -->
-        <section class="project-content-section" id="task">
-          <h2 class="project-section-title"><span class="project-section-number">01</span> <span class="project-section-label">Task</span></h2>
-
-            <div class="problem-intro-list">
-            <div class="problem-row">
-                <div class="problem-row-text">
-                <h3 class="problem-subheading">What’s the Task?</h3>
-                <p class="problem-text">In the course provided by the UX Design Institute I was tasked with developing a new solution for an Airline Booking Website. This curriculum was broken down into single 'Projects' which were to be submitted for marking.</p>
-                </div>
-            </div>
-
-            <div class="problem-row">
-                <div class="problem-row-text">
-                <h3 class="problem-subheading">Aims & Objectives</h3>
-                <p class="problem-text">The goal of this course was to create a high fidelity protoype following the UX Design process outlined in the curriculum. By the end of this I would have the foundational knowledge and skills to apply these principles in real-world scenarios. Even better I would have a project to include in my own Portfolio.</p>
-                </div>
-            </div>
-            </div>
-
-          <!-- UX Process Graphic -->
-          <div class="ux-timeline">
-
-            <div class="ux-timeline-item">
-              <div class="ux-timeline-marker">
-                <span class="ux-timeline-num">01</span>
-                <div class="ux-timeline-line"></div>
-              </div>
-              <div class="ux-timeline-content">
-                <h4 class="ux-timeline-title">Research</h4>
-                <div class="ux-timeline-tags">
-                  <span class="ux-tag">Competitive Benchmark</span>
-                  <span class="ux-tag">Online Survey</span>
-                  <span class="ux-tag">Note Taking</span>
-                  <span class="ux-tag">Usability Test</span>
-                </div>
-              </div>
-            </div>
-
-            <div class="ux-timeline-item">
-              <div class="ux-timeline-marker">
-                <span class="ux-timeline-num">02</span>
-                <div class="ux-timeline-line"></div>
-              </div>
-              <div class="ux-timeline-content">
-                <h4 class="ux-timeline-title">Analysis</h4>
-                <div class="ux-timeline-tags">
-                  <span class="ux-tag">Affinity Diagram</span>
-                  <span class="ux-tag">Customer Journey Map</span>
-                </div>
-              </div>
-            </div>
-
-            <div class="ux-timeline-item">
-              <div class="ux-timeline-marker">
-                <span class="ux-timeline-num">03</span>
-                <div class="ux-timeline-line"></div>
-              </div>
-              <div class="ux-timeline-content">
-                <h4 class="ux-timeline-title">Concept</h4>
-                <div class="ux-timeline-tags">
-                  <span class="ux-tag">Flow Diagram</span>
-                  <span class="ux-tag">Interaction Sketches</span>
-                </div>
-              </div>
-            </div>
-
-            <div class="ux-timeline-item ux-timeline-item--last">
-              <div class="ux-timeline-marker">
-                <span class="ux-timeline-num">04</span>
-              </div>
-              <div class="ux-timeline-content">
-                <h4 class="ux-timeline-title">Design</h4>
-                <div class="ux-timeline-tags">
-                  <span class="ux-tag">Prototype</span>
-                  <span class="ux-tag">Usability Test</span>
-                  <span class="ux-tag">Annotations</span>
-                </div>
-              </div>
-            </div>
-
-          </div>
-
-        </section>
-
-        <!-- Research -->
-        <section class="project-content-section" id="research">
-          <h2 class="project-section-title"><span class="project-section-number">02</span> <span class="project-section-label">Research</span></h2>
-          <div class="problem-intro-list">
-            <div class="problem-row">
-                <div class="problem-row-text">
-                <h3 class="problem-subheading">Competitive Benchmarking</h3>
-                <p class="problem-text">This involved reserching a variety of competitior products to gage an understanding of user flow, mental models and visual hierarchy. In this section I selected products targeting the different price points in the airline industry. By doing so I was able to identify key features and pain points across the market.</p>
-                </div>
-            </div>
-
-            <div class="problem-row">
-                <div class="problem-row-text">
-                <h3 class="problem-subheading">Online Survey</h3>
-                <p class="problem-text">Using Google Forms I created a survey to gather both qualitative and quantitative data from friends and family. By doing so I was able to gain insights outlining past experiences from when visiting airline websites. Having asked open ended questions I had more flexibility in capturing nuanced feedback. Asking questions like 'Why did visit the website that day?' and 'Were you able to complete your tasks that day, if not why?' gave empathetic insights into user needs and pain points.</p>
-                </div>
-            </div>
-
-            <div class="problem-row">
-                <div class="problem-row-text">
-                <h3 class="problem-subheading">Note Taking</h3>
-                <p class="problem-text">In this task I was provided with 2 recordings of usability tests, each showed a user accessing 2 different airline websites. Having watched the recordings I was able to find pattrerns in their behaviour and decision-making processes, both users demonstrated how conventions moulded their interactions.</p>
-                </div>
-            </div>
-
-            <div class="problem-row">
-                <div class="problem-row-text">
-                <h3 class="problem-subheading">Usability Testing</h3>
-                <p class="problem-text">I conducted usability tests with real users (with no UX knowledge) to observe their behaviour when attempting to book flights on these platforms. Once again I created detailed notes using observations and quotes from the sessionss.</p>
-                <p class="problem-text">Not only did this help develop soft skills like communication & empathy, but it also provided a primary source of data which would be collated and analysed in the subsequent phases.</p>
-                </div>
-            </div>
-
-            <!-- Research artefacts grid -->
-            <div class="project-artefacts-grid">
-              <div class="artefact-card">
-                <img src="Images/UXDIProject/Affinity Diagram - Competitive Benchmarking.jpg" alt="Competitive Benchmarking Affinity Diagram" class="artefact-img">
-                <span class="artefact-label">Competitive Benchmarking</span>
-              </div>
-              <div class="artefact-card">
-                <img src="Images/UXDIProject/Affinity Diagram - Online Survey.jpg" alt="Online Survey Affinity Diagram" class="artefact-img">
-                <span class="artefact-label">Online Survey</span>
-              </div>
-              <div class="artefact-card">
-                <img src="Images/UXDIProject/Affinity Diagram - Note Taking.jpg" alt="Note Taking Affinity Diagram" class="artefact-img">
-                <span class="artefact-label">Note Taking</span>
-              </div>
-              <div class="artefact-card">
-                <img src="Images/UXDIProject/Affinity Diagram - Usability Test.jpg" alt="Usability Test Affinity Diagram" class="artefact-img">
-                <span class="artefact-label">Usability Test</span>
-              </div>
-              <div class="artefact-card">
-                <img src="Images/UXDIProject/Affinity Diagram - Grouping.jpg" alt="Affinity Diagram Grouping" class="artefact-img">
-                <span class="artefact-label">Grouping</span>
-              </div>
-              <div class="artefact-card">
-                <img src="Images/UXDIProject/Affinity Diagram - Labelling and Subgrouping.jpg" alt="Affinity Diagram Label and Subgrouping" class="artefact-img">
-                <span class="artefact-label">Label and Subgrouping</span>
-              </div>
-            </div>
-        </section>
-
-        <!-- Analysis -->
-        <section class="project-content-section" id="analysis">
-          <h2 class="project-section-title"><span class="project-section-number">03</span> <span class="project-section-label">Analysis</span></h2>
-          <div class="problem-intro-list">
-            <div class="problem-row">
-                <div class="problem-row-text">
-                <h3 class="problem-subheading">Affinity Diagram</h3>
-                <p class="problem-text">For this project I used Miro to create an affinity diagram. I undertook several passes to organise the ideas into groups and subgroups relevant to the task. By doing so I was able to isolate key patterns where I could identify recurring pain points.</p>
-                </div>
-            </div>
-
-            <div class="problem-row">
-                <div class="problem-row-text">
-                <h3 class="problem-subheading">Customer Journey Map</h3>
-                <p class="problem-text">Following the affinity diagram, I created a customer journey map to visualise the user's experience across different stages of the booking process. Using different screens as the different stages I identified touchpoints, actions, pain points and opportunities. Within these rows I entered data and insights gathered from the research phase.</p>
-                </div>
-            </div>
-
-            <!-- Analysis note -->
-            <div class="project-insight-note">
-              <p>The customer journey map from this phase was unfortunately lost from the Miro board during the project. The affinity diagrams above represent the analytical work that directly informed the flow diagrams in the Concept phase.</p>
-            </div>
-
-          </div>
-        </section>
-
-        <!-- Concept -->
-        <section class="project-content-section" id="concept">
-          <h2 class="project-section-title"><span class="project-section-number">04</span> <span class="project-section-label">Concept</span></h2>
-          <div class="problem-intro-list">
-            <div class="problem-row">
-                <div class="problem-row-text">
-                <h3 class="problem-subheading">Flow Diagrams</h3>
-                <p class="problem-text">Now that we were in the concept phase I had to create a diagram to illustrate the main user flow. The flow started from the initial point of contact where the user opens the website and follows through the steps required to book a flight. To show the different elements of the flow I used a combinations of shapes to represent Screen content, Processes and Decisions.</p>
-                </div>
-            </div>
-
-            <!-- Flow diagram full width -->
-            <div class="project-image-full">
-              <img src="Images/UXDIProject/Flow Diagram.jpg" alt="User Flow Diagram" class="project-img-full">
-              <span class="project-img-caption">User flow diagram mapping the complete airline booking journey</span>
-            </div>
-
-            <div class="problem-row">
-                <div class="problem-row-text">
-                <h3 class="problem-subheading">Interaction Sketches</h3>
-                <p class="problem-text">Using the flow diagram as a foundation, I then began conceptualising the interactions for each screen. I started by creating low-fidelity wireframes and made some paper cut outs which I used to create recreate elements which not only saved time but allowed me to experiment with different layouts. To add further detail I outlined the features present on that screen as well as a brief description of their functionality.</p>
-                </div>
-            </div>
-
-            <!-- Interaction sketches full width -->
-            <div class="project-image-full">
-              <img src="Images/UXDIProject/Interaction Design.jpg" alt="Interaction Design Sketches" class="project-img-full">
-              <span class="project-img-caption">Low-fidelity interaction sketches annotated with design decisions</span>
-            </div>
-
-          </div>
-        </section>
-
-        <!-- Design -->
-        <section class="project-content-section" id="design">
-          <h2 class="project-section-title"><span class="project-section-number">05</span> <span class="project-section-label">Design</span></h2>
-          <div class="problem-intro-list">
-            <div class="problem-row">
-                <div class="problem-row-text">
-                <h3 class="problem-subheading">Prototype</h3>
-                <p class="problem-text">Using the wireframes as a guide I began creating an interactive prototype using Figma. At first this was tricky, learning a new software had its challenges but I persevered and became profficient enough to create a functional prototype. Factors like visual hierarchy and user feedback influenced the design.</p>
-                <p class="problem-text">One area in which I know I could have improved was the UI design. At first I designed a very simple interface with minimal styling, the reason for this was to focus on the problem at hand. Despite this I did receive a lot of positive feedback from my tutors regarding the usability and overall user experience.</p>
-                </div>
-            </div>
-
-            <!-- Initial prototype carousel -->
-            <div class="carousel" role="region" aria-label="Initial prototype screenshots">
-              <div class="carousel-track-wrap">
-                <div class="carousel-track">
-                  <div class="carousel-slide"><img src="Images/UXDIProject/P1 Homepage Location.png" alt="Homepage Location"></div>
-                  <div class="carousel-slide"><img src="Images/UXDIProject/P1 Homepage.png" alt="Homepage"></div>
-                  <div class="carousel-slide"><img src="Images/UXDIProject/P1 Homepage Search.png" alt="Homepage Search"></div>
-                  <div class="carousel-slide"><img src="Images/UXDIProject/P1 Loading Screen.png" alt="Loading screen"></div>
-                  <div class="carousel-slide"><img src="Images/UXDIProject/P1 Flight 1.png" alt="Flight 1"></div>
-                  <div class="carousel-slide"><img src="Images/UXDIProject/P1 Flight 1 Open.png" alt="Flight 1 Open"></div>
-                  <div class="carousel-slide"><img src="Images/UXDIProject/P1 Summary.png" alt="Summary"></div>
-                  <div class="carousel-slide"><img src="Images/UXDIProject/P1 Extras.png" alt="Extras"></div>
-                  <div class="carousel-slide"><img src="Images/UXDIProject/P1 Pricing Total.png" alt="Pricing Total"></div>
-                </div>
-              </div>
-              <div class="carousel-controls">
-                <button class="carousel-btn carousel-btn--prev" aria-label="Previous slide"><svg viewBox="0 0 24 24" fill="none" width="20" height="20"><path d="M15 18L9 12L15 6" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
-                <div class="carousel-dots" role="tablist"></div>
-                <button class="carousel-btn carousel-btn--next" aria-label="Next slide"><svg viewBox="0 0 24 24" fill="none" width="20" height="20"><path d="M9 18L15 12L9 6" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
-              </div>
-            </div>
-
-            <div class="problem-row">
-                <div class="problem-row-text">
-                <h3 class="problem-subheading">Usability Testing</h3>
-                <p class="problem-text">To maintain a user-centered approach, I conducted further usability tests to validate design decisions and gather constructive feedback as to what could be improved. As expected the feedback was largely positive. I found that the users had little friction navigating the booking process and valued how the streamlined experience would impact their perception of booking flights.</p>
-                </div>
-            </div>
-
-            <div class="problem-row">
-                <div class="problem-row-text">
-                <h3 class="problem-subheading">Annotations</h3>
-                <p class="problem-text">The final project of the curriculum was centered the idea of project handoff. A key principle was learning the importance of specificity and how detailed annotations can be used effectively to reduce the risk of errors during development. Using Figma's commenting function I added detailed annotations to my prototype explaining the design rationale and outlining how elements should interact with the user to improve UX.</p>
-                </div>
-            </div>
-
-            <div class="problem-row">
-                <div class="problem-row-text">
-                <h3 class="problem-subheading">Redesign</h3>
-                <p class="problem-text">After completing the course I revisited the design with fresh eyes and a stronger foundation in UI. I rebuilt the interface from scratch in Figma — darker, more immersive, and visually cohesive. The booking flow was refined, the navigation made more intuitive, and the visual language brought closer to industry standards.</p>
-                </div>
-            </div>
-
-            <!-- Redesign carousel -->
-            <div class="carousel" role="region" aria-label="Redesign screenshots">
-              <div class="carousel-track-wrap">
-                <div class="carousel-track">
-                  <div class="carousel-slide"><img src="Images/UXDIProject/P2 Homepage.png" alt="Redesigned homepage"></div>
-                  <div class="carousel-slide"><img src="Images/UXDIProject/P2 Pop Dest.png" alt="Popular Destinations"></div>
-                  <div class="carousel-slide"><img src="Images/UXDIProject/P2 Member.png" alt="Member"></div>
-                  <div class="carousel-slide"><img src="Images/UXDIProject/P2 Form.png" alt="Form"></div>
-                  <div class="carousel-slide"><img src="Images/UXDIProject/P2 Customer Services.png" alt="Customer Services"></div>
-                  <div class="carousel-slide"><img src="Images/UXDIProject/P2 Flight 1.png" alt="Flight 1"></div>
-                  <div class="carousel-slide"><img src="Images/UXDIProject/P2 Flight 1 Open.png" alt="Flight 1 Open"></div>
-                  <div class="carousel-slide"><img src="Images/UXDIProject/P2 Travel Summary.png" alt="Travel Summary"></div>
-                  <div class="carousel-slide"><img src="Images/UXDIProject/P2 Passenger Details.png" alt="Passenger Details"></div>
-                  <div class="carousel-slide"><img src="Images/UXDIProject/P2 Passenger Details 2.png" alt="Passenger Details 2"></div>
-                  <div class="carousel-slide"><img src="Images/UXDIProject/P2 Seat Selection.png" alt="Seat Selection"></div>
-                  <div class="carousel-slide"><img src="Images/UXDIProject/P2 Extras.png" alt="Extras"></div>
-                  <div class="carousel-slide"><img src="Images/UXDIProject/P2 Payment Details 1.png" alt="Payment Details 1"></div>
-                  <div class="carousel-slide"><img src="Images/UXDIProject/P2 Payment Details 2.png" alt="Payment Details 2"></div>
-                  <div class="carousel-slide"><img src="Images/UXDIProject/P2 Payment Details 3.png" alt="Payment Details 3"></div>
-                </div>
-              </div>
-              <div class="carousel-controls">
-                <button class="carousel-btn carousel-btn--prev" aria-label="Previous slide"><svg viewBox="0 0 24 24" fill="none" width="20" height="20"><path d="M15 18L9 12L15 6" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
-                <div class="carousel-dots" role="tablist"></div>
-                <button class="carousel-btn carousel-btn--next" aria-label="Next slide"><svg viewBox="0 0 24 24" fill="none" width="20" height="20"><path d="M9 18L15 12L9 6" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
-              </div>
-            </div>
-
-          </div>
-        </section>
-
-
-        <!-- Reflection -->
-        <section class="project-content-section" id="reflection">
-          <h2 class="project-section-title"><span class="project-section-number">06</span> <span class="project-section-label">Reflection</span></h2>
-          <div class="problem-intro-list">
-            <div class="problem-row">
-                <div class="problem-row-text">
-                <h3 class="problem-subheading">What I'd do differently?</h3>
-                <p class="problem-text">If I had more time I would have conducted more extensive research on UI design. Not only would this have improved the overall quality of the experience but it would have also allowed me to explore more innovative solutions. At the time I was primarily focused on Design principles like Hick's Law and Visual Affordances to aid the user during the booking process. The reason I was so restrictive of myself was to ensure I'd meet the targets for success provided by the curriculum.</p>
-                <p class="problem-text">Another factor which limited my designs was the lack of experience using Figma. As this was my first time with the software I struggled with the learning curve, after repetition I did manage to learn how to use feature like auto layout and components. As a result of this I was able to redesign the UI and vastly improve the visual perception of the website.</p>
-                </div>
-            </div>
-
-            <div class="problem-row">
-              <div class="problem-row-text">
-                <h3 class="problem-subheading">What's next?</h3>
-                <p class="problem-text">Moving forward I plan to experiment more with Figma which I believe will further enhance my design capablities. I consider myself a logical thinker which is why I prioritize data-driven decisions in my design process. I'd like to continue building on the foundation I've established from course by exploring a wider range of successful products and analysing how design decisions make the user experience so effective.</p>
-               </div>
-            </div>
-          </div>
-
-        </section>
+  <header class="wrap case-hero">
+    <a class="back-link" href="Projects.html"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M19 12H5M11 18l-6-6 6-6"/></svg> All projects</a>
+    <div class="case-hero__grid">
+      <div class="case-hero__text">
+        <p class="case-hero__client">UX Design Institute diploma</p>
+        <h1 class="case-hero__title">Airline booking redesign</h1>
+        <p class="case-hero__lede">A nine-month diploma project taking an airline booking flow from usability research and affinity mapping through to a high-fidelity prototype, then a full UI redesign.</p>
+        
       </div>
-
-
-      
-      <nav class="project-side-menu" aria-label="Project section navigation">
-        <a href="#overview" class="project-side-link">Overview</a>
-        <a href="#task" class="project-side-link">Task</a>
-        <a href="#research" class="project-side-link">Research</a>
-        <a href="#analysis" class="project-side-link">Analysis</a>
-        <a href="#concept" class="project-side-link">Concept</a>
-        <a href="#design" class="project-side-link">Design</a>
-        <a href="#reflection" class="project-side-link">Reflection</a>
-      </nav>
+      <div class="case-stage" aria-hidden="false">
+        <img class="case-stage__shot" src="Images/UXDIProject/P2 Homepage.png" alt="The redesigned airline booking homepage" data-fallback="Images/UXDIProject/Interaction Design.jpg" fetchpriority="high">
+      </div>
     </div>
-  </div>
-</section>
+    <dl class="spec" id="overview" style="--cols:3"><div><dt>My role</dt><dd>User research, research analysis, wireframing, prototyping</dd></div><div><dt>Duration</dt><dd>September 2023 to June 2024</dd></div><div><dt>Tools</dt><dd>Figma, Miro, Google Forms</dd></div></dl>
+  </header>
 
-<!-- Footer -->
-<footer class="footer">
-  <div class="footer-content">
-    <a href="index.html" class="logo">KARUN KAHLON</a>
-    
-    <a href="https://www.linkedin.com/in/karun-kahlon-783655301/" 
-       class="linkedin-link" 
-       target="_blank" 
-       aria-label="LinkedIn Profile">
-      <svg xmlns="http://www.w3.org/2000/svg" 
-           width="24" 
-           height="24" 
-           viewBox="0 0 24 24" 
-           fill="white">
-        <path d="M4.98 3.5C4.98 4.88 3.86 6 2.48 6S0 4.88 0 3.5 1.12 1 2.48 1s2.5 1.12 2.5 2.5zM0 8h5v16H0V8zm7.5 0h4.78v2.2h.07c.67-1.27 2.3-2.6 4.73-2.6 5.06 0 6 3.33 6 7.66V24h-5v-6.88c0-1.64-.03-3.75-2.28-3.75-2.29 0-2.64 1.79-2.64 3.63V24h-5V8z"/>
-      </svg>
-    </a>
+  <div class="wrap case-layout">
+        <div class="case-content">
+
+          <section class="case-section" id="task" aria-labelledby="task-t">
+            <div class="case-section__head"><span class="case-section__n">01</span><h2 class="case-section__title" id="task-t">Task</h2></div>
+              <div class="block block--lead">
+                <h3>What's the task?</h3>
+                <p>On the UX Design Institute course I was tasked with developing a new solution for an airline booking website. The curriculum was broken into individual projects, each submitted for marking.</p>
+              </div>
+              <div class="block">
+                <h3>Aims and objectives</h3>
+                <p>The goal was to create a high-fidelity prototype following the UX design process in the curriculum. By the end I'd have the foundational knowledge to apply these principles in real-world scenarios, and a project for my portfolio.</p>
+              </div>
+              <ol class="timeline" aria-label="The UX process I followed">
+                <li><span class="timeline__n">Phase 1</span><h4>Research</h4><div class="tags"><span class="tag">Competitive benchmark</span><span class="tag">Online survey</span><span class="tag">Note taking</span><span class="tag">Usability test</span></div></li>
+                <li><span class="timeline__n">Phase 2</span><h4>Analysis</h4><div class="tags"><span class="tag">Affinity diagram</span><span class="tag">Customer journey map</span></div></li>
+                <li><span class="timeline__n">Phase 3</span><h4>Concept</h4><div class="tags"><span class="tag">Flow diagram</span><span class="tag">Interaction sketches</span></div></li>
+                <li><span class="timeline__n">Phase 4</span><h4>Design</h4><div class="tags"><span class="tag">Prototype</span><span class="tag">Usability test</span><span class="tag">Annotations</span></div></li>
+              </ol>
+          </section>
+
+          <section class="case-section" id="research" aria-labelledby="research-t">
+            <div class="case-section__head"><span class="case-section__n">02</span><h2 class="case-section__title" id="research-t">Research</h2></div>
+              <div class="block block--lead">
+                <h3>Competitive benchmarking</h3>
+                <p>I researched a range of competitor products to understand user flows, mental models and visual hierarchy. I chose airlines at different price points, which helped me identify key features and pain points across the market.</p>
+              </div>
+              <div class="block">
+                <h3>Online survey</h3>
+                <p>Using Google Forms, I created a survey to gather qualitative and quantitative data from friends and family about past experiences on airline websites. Open-ended questions like ‘Why did you visit the website that day?’ and ‘Were you able to complete your tasks? If not, why?’ gave empathetic insight into user needs and pain points.</p>
+              </div>
+              <div class="block">
+                <h3>Note taking</h3>
+                <p>I was given two recordings of usability tests, each showing a user on two different airline websites. Watching them, I found patterns in behaviour and decision-making. Both users showed how conventions shaped their interactions.</p>
+              </div>
+              <div class="block">
+                <h3>Usability testing</h3>
+                <p>I ran usability tests with real users (with no UX knowledge) to observe how they booked flights on these platforms, taking detailed notes of observations and quotes.</p>
+                <p>As well as building soft skills like communication and empathy, this gave me a primary source of data to collate and analyse in the next phases.</p>
+              </div>
+              <div class="artefacts">
+                <div class="artefact" data-reveal><button type="button" data-lightbox="uxdi-research" data-cursor="Zoom in" data-cursor-icon="zoom" aria-label="Expand: Competitive benchmarking affinity diagram"><img src="Images/UXDIProject/Affinity Diagram - Competitive Benchmarking.jpg" alt="Competitive benchmarking affinity diagram" loading="lazy" decoding="async"></button><span class="artefact__label">Competitive benchmarking</span><span class="zoom-hint" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" aria-hidden="true"><circle cx="11" cy="11" r="6.5"/><path d="m20 20-4.2-4.2M11 8.5v5M8.5 11h5"/></svg></span></div>
+                <div class="artefact" data-reveal><button type="button" data-lightbox="uxdi-research" data-cursor="Zoom in" data-cursor-icon="zoom" aria-label="Expand: Online survey affinity diagram"><img src="Images/UXDIProject/Affinity Diagram - Online Survey.jpg" alt="Online survey affinity diagram" loading="lazy" decoding="async"></button><span class="artefact__label">Online survey</span><span class="zoom-hint" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" aria-hidden="true"><circle cx="11" cy="11" r="6.5"/><path d="m20 20-4.2-4.2M11 8.5v5M8.5 11h5"/></svg></span></div>
+                <div class="artefact" data-reveal><button type="button" data-lightbox="uxdi-research" data-cursor="Zoom in" data-cursor-icon="zoom" aria-label="Expand: Note taking affinity diagram"><img src="Images/UXDIProject/Affinity Diagram - Note Taking.jpg" alt="Note taking affinity diagram" loading="lazy" decoding="async"></button><span class="artefact__label">Note taking</span><span class="zoom-hint" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" aria-hidden="true"><circle cx="11" cy="11" r="6.5"/><path d="m20 20-4.2-4.2M11 8.5v5M8.5 11h5"/></svg></span></div>
+                <div class="artefact" data-reveal><button type="button" data-lightbox="uxdi-research" data-cursor="Zoom in" data-cursor-icon="zoom" aria-label="Expand: Usability test affinity diagram"><img src="Images/UXDIProject/Affinity Diagram - Usability Test.jpg" alt="Usability test affinity diagram" loading="lazy" decoding="async"></button><span class="artefact__label">Usability test</span><span class="zoom-hint" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" aria-hidden="true"><circle cx="11" cy="11" r="6.5"/><path d="m20 20-4.2-4.2M11 8.5v5M8.5 11h5"/></svg></span></div>
+                <div class="artefact" data-reveal><button type="button" data-lightbox="uxdi-research" data-cursor="Zoom in" data-cursor-icon="zoom" aria-label="Expand: Grouping affinity diagram"><img src="Images/UXDIProject/Affinity Diagram - Grouping.jpg" alt="Grouping affinity diagram" loading="lazy" decoding="async"></button><span class="artefact__label">Grouping</span><span class="zoom-hint" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" aria-hidden="true"><circle cx="11" cy="11" r="6.5"/><path d="m20 20-4.2-4.2M11 8.5v5M8.5 11h5"/></svg></span></div>
+                <div class="artefact" data-reveal><button type="button" data-lightbox="uxdi-research" data-cursor="Zoom in" data-cursor-icon="zoom" aria-label="Expand: Labelling and subgrouping affinity diagram"><img src="Images/UXDIProject/Affinity Diagram - Labelling and Subgrouping.jpg" alt="Labelling and subgrouping affinity diagram" loading="lazy" decoding="async"></button><span class="artefact__label">Labelling and subgrouping</span><span class="zoom-hint" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" aria-hidden="true"><circle cx="11" cy="11" r="6.5"/><path d="m20 20-4.2-4.2M11 8.5v5M8.5 11h5"/></svg></span></div>
+              </div>
+          </section>
+
+          <section class="case-section" id="analysis" aria-labelledby="analysis-t">
+            <div class="case-section__head"><span class="case-section__n">03</span><h2 class="case-section__title" id="analysis-t">Analysis</h2></div>
+              <div class="block block--lead">
+                <h3>Affinity diagram</h3>
+                <p>I used Miro to create an affinity diagram, making several passes to organise ideas into groups and subgroups. This isolated the key patterns where I could identify recurring pain points.</p>
+              </div>
+              <div class="block">
+                <h3>Customer journey map</h3>
+                <p>Next, I created a customer journey map to visualise the experience across each stage of booking. Using the screens as stages, I mapped touchpoints, actions, pain points and opportunities with insights from the research phase.</p>
+              </div>
+              <p class="note">The customer journey map was unfortunately lost from the Miro board during the project. The affinity diagrams above represent the analysis that directly informed the flow diagrams in the concept phase.</p>
+          </section>
+
+          <section class="case-section" id="concept" aria-labelledby="concept-t">
+            <div class="case-section__head"><span class="case-section__n">04</span><h2 class="case-section__title" id="concept-t">Concept</h2></div>
+              <div class="block block--lead">
+                <h3>Flow diagrams</h3>
+                <p>In the concept phase I created a diagram of the main user flow, from the moment someone opens the website through every step needed to book a flight. Different shapes represent screen content, processes and decisions.</p>
+              </div>
+              <figure class="figure">
+                <button class="figure__frame" type="button" data-lightbox="uxdi-concept" data-cursor="Zoom in" data-cursor-icon="zoom" data-reveal aria-label="Expand: User flow diagram"><img src="Images/UXDIProject/Flow Diagram.jpg" alt="User flow diagram" loading="lazy" decoding="async"><span class="zoom-hint" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" aria-hidden="true"><circle cx="11" cy="11" r="6.5"/><path d="m20 20-4.2-4.2M11 8.5v5M8.5 11h5"/></svg></span></button>
+                <figcaption>User flow diagram mapping the complete airline booking journey. Click to zoom in.</figcaption>
+              </figure>
+              <div class="block">
+                <h3>Interaction sketches</h3>
+                <p>Using the flow diagram as a foundation, I conceptualised the interactions for each screen. I started with low-fidelity wireframes and paper cut-outs, which saved time and let me experiment with layouts. I then noted the features on each screen with a short description of how they work.</p>
+              </div>
+              <figure class="figure">
+                <button class="figure__frame" type="button" data-lightbox="uxdi-concept" data-cursor="Zoom in" data-cursor-icon="zoom" data-reveal aria-label="Expand: Interaction design sketches"><img src="Images/UXDIProject/Interaction Design.jpg" alt="Interaction design sketches" loading="lazy" decoding="async"><span class="zoom-hint" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" aria-hidden="true"><circle cx="11" cy="11" r="6.5"/><path d="m20 20-4.2-4.2M11 8.5v5M8.5 11h5"/></svg></span></button>
+                <figcaption>Low-fidelity interaction sketches annotated with design decisions.</figcaption>
+              </figure>
+          </section>
+
+          <section class="case-section" id="design" aria-labelledby="design-t">
+            <div class="case-section__head"><span class="case-section__n">05</span><h2 class="case-section__title" id="design-t">Design</h2></div>
+              <div class="block block--lead">
+                <h3>Prototype</h3>
+                <p>Using the wireframes as a guide, I built an interactive prototype in Figma. Learning new software had its challenges, but I persevered and became proficient enough to create a functional prototype. Visual hierarchy and user feedback shaped the design.</p>
+                <p>One area I know I could have improved was the UI. I first designed a very simple interface with minimal styling so I could focus on the problem at hand. Even so, my tutors gave a lot of positive feedback on the usability and overall experience.</p>
+              </div>
+              <div class="gallery" role="region" aria-roledescription="carousel" aria-label="Initial prototype screens">
+                <div class="gallery__head">
+                  <p class="gallery__caption"><span class="gallery__caption-text"></span><span class="gallery__count"></span></p>
+                  <div class="gallery__controls">
+                    <button class="icon-btn" type="button" data-prev aria-label="Previous screen"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 18l-6-6 6-6"/></svg></button>
+                    <button class="icon-btn" type="button" data-next aria-label="Next screen"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 18l6-6-6-6"/></svg></button>
+                  </div>
+                </div>
+                <div class="gallery__track" tabindex="0" aria-label="Initial prototype screens. Drag, swipe or use the arrow keys.">
+                  <div class="gallery__slide"><button type="button" data-lightbox="uxdi-p1" data-cursor="Expand" data-cursor-icon="zoom" aria-label="Expand: Homepage, location"><img src="Images/UXDIProject/P1 Homepage Location.png" alt="Homepage, location" loading="lazy" decoding="async"></button><span class="zoom-hint" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" aria-hidden="true"><circle cx="11" cy="11" r="6.5"/><path d="m20 20-4.2-4.2M11 8.5v5M8.5 11h5"/></svg></span></div>
+                  <div class="gallery__slide"><button type="button" data-lightbox="uxdi-p1" data-cursor="Expand" data-cursor-icon="zoom" aria-label="Expand: Homepage"><img src="Images/UXDIProject/P1 Homepage.png" alt="Homepage" loading="lazy" decoding="async"></button><span class="zoom-hint" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" aria-hidden="true"><circle cx="11" cy="11" r="6.5"/><path d="m20 20-4.2-4.2M11 8.5v5M8.5 11h5"/></svg></span></div>
+                  <div class="gallery__slide"><button type="button" data-lightbox="uxdi-p1" data-cursor="Expand" data-cursor-icon="zoom" aria-label="Expand: Homepage, search"><img src="Images/UXDIProject/P1 Homepage Search.png" alt="Homepage, search" loading="lazy" decoding="async"></button><span class="zoom-hint" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" aria-hidden="true"><circle cx="11" cy="11" r="6.5"/><path d="m20 20-4.2-4.2M11 8.5v5M8.5 11h5"/></svg></span></div>
+                  <div class="gallery__slide"><button type="button" data-lightbox="uxdi-p1" data-cursor="Expand" data-cursor-icon="zoom" aria-label="Expand: Loading screen"><img src="Images/UXDIProject/P1 Loading Screen.png" alt="Loading screen" loading="lazy" decoding="async"></button><span class="zoom-hint" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" aria-hidden="true"><circle cx="11" cy="11" r="6.5"/><path d="m20 20-4.2-4.2M11 8.5v5M8.5 11h5"/></svg></span></div>
+                  <div class="gallery__slide"><button type="button" data-lightbox="uxdi-p1" data-cursor="Expand" data-cursor-icon="zoom" aria-label="Expand: Flight results"><img src="Images/UXDIProject/P1 Flight 1.png" alt="Flight results" loading="lazy" decoding="async"></button><span class="zoom-hint" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" aria-hidden="true"><circle cx="11" cy="11" r="6.5"/><path d="m20 20-4.2-4.2M11 8.5v5M8.5 11h5"/></svg></span></div>
+                  <div class="gallery__slide"><button type="button" data-lightbox="uxdi-p1" data-cursor="Expand" data-cursor-icon="zoom" aria-label="Expand: Flight details open"><img src="Images/UXDIProject/P1 Flight 1 Open.png" alt="Flight details open" loading="lazy" decoding="async"></button><span class="zoom-hint" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" aria-hidden="true"><circle cx="11" cy="11" r="6.5"/><path d="m20 20-4.2-4.2M11 8.5v5M8.5 11h5"/></svg></span></div>
+                  <div class="gallery__slide"><button type="button" data-lightbox="uxdi-p1" data-cursor="Expand" data-cursor-icon="zoom" aria-label="Expand: Summary"><img src="Images/UXDIProject/P1 Summary.png" alt="Summary" loading="lazy" decoding="async"></button><span class="zoom-hint" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" aria-hidden="true"><circle cx="11" cy="11" r="6.5"/><path d="m20 20-4.2-4.2M11 8.5v5M8.5 11h5"/></svg></span></div>
+                  <div class="gallery__slide"><button type="button" data-lightbox="uxdi-p1" data-cursor="Expand" data-cursor-icon="zoom" aria-label="Expand: Extras"><img src="Images/UXDIProject/P1 Extras.png" alt="Extras" loading="lazy" decoding="async"></button><span class="zoom-hint" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" aria-hidden="true"><circle cx="11" cy="11" r="6.5"/><path d="m20 20-4.2-4.2M11 8.5v5M8.5 11h5"/></svg></span></div>
+                  <div class="gallery__slide"><button type="button" data-lightbox="uxdi-p1" data-cursor="Expand" data-cursor-icon="zoom" aria-label="Expand: Pricing total"><img src="Images/UXDIProject/P1 Pricing Total.png" alt="Pricing total" loading="lazy" decoding="async"></button><span class="zoom-hint" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" aria-hidden="true"><circle cx="11" cy="11" r="6.5"/><path d="m20 20-4.2-4.2M11 8.5v5M8.5 11h5"/></svg></span></div>
+                </div>
+                <div class="gallery__bar" aria-hidden="true"><span></span></div>
+              </div>
+              <div class="block">
+                <h3>Usability testing</h3>
+                <p>To stay user-centred, I ran further usability tests to validate design decisions and gather constructive feedback. The feedback was largely positive: users had little friction navigating the booking process and valued how streamlined it felt.</p>
+              </div>
+              <div class="block">
+                <h3>Annotations</h3>
+                <p>The final project focused on handoff. I learnt how specific, detailed annotations reduce the risk of errors in development. Using Figma's comments, I annotated the prototype with design rationale and how each element should respond to the user.</p>
+              </div>
+              <div class="block">
+                <h3>Redesign</h3>
+                <p>After the course I revisited the design with fresh eyes and a stronger foundation in UI. I rebuilt the interface from scratch in Figma: darker, more immersive and visually cohesive. The booking flow was refined, the navigation made more intuitive, and the visual language brought closer to industry standards.</p>
+              </div>
+              <div class="gallery" role="region" aria-roledescription="carousel" aria-label="Redesign screens">
+                <div class="gallery__head">
+                  <p class="gallery__caption"><span class="gallery__caption-text"></span><span class="gallery__count"></span></p>
+                  <div class="gallery__controls">
+                    <button class="icon-btn" type="button" data-prev aria-label="Previous screen"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 18l-6-6 6-6"/></svg></button>
+                    <button class="icon-btn" type="button" data-next aria-label="Next screen"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 18l6-6-6-6"/></svg></button>
+                  </div>
+                </div>
+                <div class="gallery__track" tabindex="0" aria-label="Redesign screens. Drag, swipe or use the arrow keys.">
+                  <div class="gallery__slide"><button type="button" data-lightbox="uxdi-p2" data-cursor="Expand" data-cursor-icon="zoom" aria-label="Expand: Redesigned homepage"><img src="Images/UXDIProject/P2 Homepage.png" alt="Redesigned homepage" loading="lazy" decoding="async"></button><span class="zoom-hint" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" aria-hidden="true"><circle cx="11" cy="11" r="6.5"/><path d="m20 20-4.2-4.2M11 8.5v5M8.5 11h5"/></svg></span></div>
+                  <div class="gallery__slide"><button type="button" data-lightbox="uxdi-p2" data-cursor="Expand" data-cursor-icon="zoom" aria-label="Expand: Popular destinations"><img src="Images/UXDIProject/P2 Pop Dest.png" alt="Popular destinations" loading="lazy" decoding="async"></button><span class="zoom-hint" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" aria-hidden="true"><circle cx="11" cy="11" r="6.5"/><path d="m20 20-4.2-4.2M11 8.5v5M8.5 11h5"/></svg></span></div>
+                  <div class="gallery__slide"><button type="button" data-lightbox="uxdi-p2" data-cursor="Expand" data-cursor-icon="zoom" aria-label="Expand: Member"><img src="Images/UXDIProject/P2 Member.png" alt="Member" loading="lazy" decoding="async"></button><span class="zoom-hint" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" aria-hidden="true"><circle cx="11" cy="11" r="6.5"/><path d="m20 20-4.2-4.2M11 8.5v5M8.5 11h5"/></svg></span></div>
+                  <div class="gallery__slide"><button type="button" data-lightbox="uxdi-p2" data-cursor="Expand" data-cursor-icon="zoom" aria-label="Expand: Form"><img src="Images/UXDIProject/P2 Form.png" alt="Form" loading="lazy" decoding="async"></button><span class="zoom-hint" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" aria-hidden="true"><circle cx="11" cy="11" r="6.5"/><path d="m20 20-4.2-4.2M11 8.5v5M8.5 11h5"/></svg></span></div>
+                  <div class="gallery__slide"><button type="button" data-lightbox="uxdi-p2" data-cursor="Expand" data-cursor-icon="zoom" aria-label="Expand: Customer services"><img src="Images/UXDIProject/P2 Customer Services.png" alt="Customer services" loading="lazy" decoding="async"></button><span class="zoom-hint" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" aria-hidden="true"><circle cx="11" cy="11" r="6.5"/><path d="m20 20-4.2-4.2M11 8.5v5M8.5 11h5"/></svg></span></div>
+                  <div class="gallery__slide"><button type="button" data-lightbox="uxdi-p2" data-cursor="Expand" data-cursor-icon="zoom" aria-label="Expand: Flight results"><img src="Images/UXDIProject/P2 Flight 1.png" alt="Flight results" loading="lazy" decoding="async"></button><span class="zoom-hint" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" aria-hidden="true"><circle cx="11" cy="11" r="6.5"/><path d="m20 20-4.2-4.2M11 8.5v5M8.5 11h5"/></svg></span></div>
+                  <div class="gallery__slide"><button type="button" data-lightbox="uxdi-p2" data-cursor="Expand" data-cursor-icon="zoom" aria-label="Expand: Flight details open"><img src="Images/UXDIProject/P2 Flight 1 Open.png" alt="Flight details open" loading="lazy" decoding="async"></button><span class="zoom-hint" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" aria-hidden="true"><circle cx="11" cy="11" r="6.5"/><path d="m20 20-4.2-4.2M11 8.5v5M8.5 11h5"/></svg></span></div>
+                  <div class="gallery__slide"><button type="button" data-lightbox="uxdi-p2" data-cursor="Expand" data-cursor-icon="zoom" aria-label="Expand: Travel summary"><img src="Images/UXDIProject/P2 Travel Summary.png" alt="Travel summary" loading="lazy" decoding="async"></button><span class="zoom-hint" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" aria-hidden="true"><circle cx="11" cy="11" r="6.5"/><path d="m20 20-4.2-4.2M11 8.5v5M8.5 11h5"/></svg></span></div>
+                  <div class="gallery__slide"><button type="button" data-lightbox="uxdi-p2" data-cursor="Expand" data-cursor-icon="zoom" aria-label="Expand: Passenger details"><img src="Images/UXDIProject/P2 Passenger Details.png" alt="Passenger details" loading="lazy" decoding="async"></button><span class="zoom-hint" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" aria-hidden="true"><circle cx="11" cy="11" r="6.5"/><path d="m20 20-4.2-4.2M11 8.5v5M8.5 11h5"/></svg></span></div>
+                  <div class="gallery__slide"><button type="button" data-lightbox="uxdi-p2" data-cursor="Expand" data-cursor-icon="zoom" aria-label="Expand: Passenger details, step 2"><img src="Images/UXDIProject/P2 Passenger Details 2.png" alt="Passenger details, step 2" loading="lazy" decoding="async"></button><span class="zoom-hint" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" aria-hidden="true"><circle cx="11" cy="11" r="6.5"/><path d="m20 20-4.2-4.2M11 8.5v5M8.5 11h5"/></svg></span></div>
+                  <div class="gallery__slide"><button type="button" data-lightbox="uxdi-p2" data-cursor="Expand" data-cursor-icon="zoom" aria-label="Expand: Seat selection"><img src="Images/UXDIProject/P2 Seat Selection.png" alt="Seat selection" loading="lazy" decoding="async"></button><span class="zoom-hint" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" aria-hidden="true"><circle cx="11" cy="11" r="6.5"/><path d="m20 20-4.2-4.2M11 8.5v5M8.5 11h5"/></svg></span></div>
+                  <div class="gallery__slide"><button type="button" data-lightbox="uxdi-p2" data-cursor="Expand" data-cursor-icon="zoom" aria-label="Expand: Extras"><img src="Images/UXDIProject/P2 Extras.png" alt="Extras" loading="lazy" decoding="async"></button><span class="zoom-hint" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" aria-hidden="true"><circle cx="11" cy="11" r="6.5"/><path d="m20 20-4.2-4.2M11 8.5v5M8.5 11h5"/></svg></span></div>
+                  <div class="gallery__slide"><button type="button" data-lightbox="uxdi-p2" data-cursor="Expand" data-cursor-icon="zoom" aria-label="Expand: Payment details"><img src="Images/UXDIProject/P2 Payment Details 1.png" alt="Payment details" loading="lazy" decoding="async"></button><span class="zoom-hint" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" aria-hidden="true"><circle cx="11" cy="11" r="6.5"/><path d="m20 20-4.2-4.2M11 8.5v5M8.5 11h5"/></svg></span></div>
+                  <div class="gallery__slide"><button type="button" data-lightbox="uxdi-p2" data-cursor="Expand" data-cursor-icon="zoom" aria-label="Expand: Payment details, step 2"><img src="Images/UXDIProject/P2 Payment Details 2.png" alt="Payment details, step 2" loading="lazy" decoding="async"></button><span class="zoom-hint" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" aria-hidden="true"><circle cx="11" cy="11" r="6.5"/><path d="m20 20-4.2-4.2M11 8.5v5M8.5 11h5"/></svg></span></div>
+                  <div class="gallery__slide"><button type="button" data-lightbox="uxdi-p2" data-cursor="Expand" data-cursor-icon="zoom" aria-label="Expand: Payment details, step 3"><img src="Images/UXDIProject/P2 Payment Details 3.png" alt="Payment details, step 3" loading="lazy" decoding="async"></button><span class="zoom-hint" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" aria-hidden="true"><circle cx="11" cy="11" r="6.5"/><path d="m20 20-4.2-4.2M11 8.5v5M8.5 11h5"/></svg></span></div>
+                </div>
+                <div class="gallery__bar" aria-hidden="true"><span></span></div>
+              </div>
+          </section>
+
+          <section class="case-section" id="reflection" aria-labelledby="reflection-t">
+            <div class="case-section__head"><span class="case-section__n">06</span><h2 class="case-section__title" id="reflection-t">Reflection</h2></div>
+              <div class="block block--lead">
+                <h3>What would I do differently?</h3>
+                <p>With more time, I'd have researched UI design more extensively. It would have improved the overall quality and let me explore more innovative solutions. At the time I focused on principles like Hick's Law and visual affordances to guide users through booking, keeping myself focused so I'd meet the curriculum's targets.</p>
+                <p>My lack of Figma experience also limited the designs. It was my first time using it, but with repetition I learnt features like auto layout and components, which let me redesign the UI and vastly improve how the site looks and feels.</p>
+              </div>
+              <div class="block">
+                <h3>What's next?</h3>
+                <p>I plan to keep experimenting in Figma to push my design skills further. I'm a logical thinker, so I prioritise data-driven decisions. I want to build on the foundation from the course by studying a wider range of successful products and analysing why their design decisions work so well.</p>
+              </div>
+          </section>
+
+        </div>
+
+        <aside class="side" aria-label="On this page">
+          <div class="side__inner">
+            <p class="side__title">On this page</p>
+            <ul class="side__list"><li><a class="side__link" href="#overview">Overview</a></li><li><a class="side__link" href="#task">Task</a></li><li><a class="side__link" href="#research">Research</a></li><li><a class="side__link" href="#analysis">Analysis</a></li><li><a class="side__link" href="#concept">Concept</a></li><li><a class="side__link" href="#design">Design</a></li><li><a class="side__link" href="#reflection">Reflection</a></li></ul>
+          </div>
+        </aside>
+  </div>
+
+  <a class="next" href="sfd-project.html" data-cursor="Next project">
+    <p class="next__label">Next case study</p>
+    <p class="next__title">Systems for Dentists</p>
+    <span class="arrow-circle" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg></span>
+    <div class="next__img"><img src="Images/SFDProject/Mockup/Landing.png" alt="Systems for Dentists preview" loading="lazy"></div>
+  </a>
+</main>
+<footer class="footer" style="border-top:0">
+  <div class="wrap footer__inner">
+    <p>&copy; <span data-year>2026</span> Karun Kahlon. Designed and built by me.</p>
+    <p>UK time <span data-clock>--:--</span></p>
+    <div class="footer__links">
+      <a href="https://www.linkedin.com/in/karun-kahlon-783655301/" target="_blank" rel="noopener noreferrer">LinkedIn</a>
+      <a href="#main">Back to top</a>
+    </div>
   </div>
 </footer>
 
-<script src="script.js"></script>
+<script src="assets/js/projects.js"></script>
+<script src="assets/js/main.js"></script>
 </body>
 </html>
