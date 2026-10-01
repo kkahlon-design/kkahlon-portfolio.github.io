@@ -90,37 +90,67 @@
     </div>
   </section>
 
-  <section class="section" id="work" aria-labelledby="work-title">
+  <section class="section pwork" id="work" aria-labelledby="work-title">
     <div class="wrap">
       <div class="section-head">
         <h2 class="section-title" id="work-title">Selected work</h2>
         <div>
-          <p class="section-note">Real projects, told from the problem through to the outcome. More are being written up.</p>
+          <p class="section-note">Real projects, told from the problem through to the outcome.</p>
           <p style="margin-top:14px"><a class="text-link" href="Projects.html">All projects <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 17 17 7M9 7h8v8"/></svg></a></p>
         </div>
       </div>
-      <ol class="stack" id="stack" style="list-style:none;margin:0;padding:0"></ol>
+      <div class="pcards" id="pcards"></div>
       <noscript><p><a class="text-link" href="sfd-project.html">Systems for Dentists</a> &nbsp; <a class="text-link" href="ux-diploma.html">Airline booking redesign</a></p></noscript>
     </div>
   </section>
 
-  <section class="philo" aria-labelledby="philo-title">
-    <div class="philo__pin">
-      <div class="wrap philo__grid">
+  <section class="loop" aria-labelledby="loop-title">
+    <div class="loop__pin">
+      <div class="wrap loop__grid">
         <div>
-          <h2 class="philo__title" id="philo-title">How I think about design</h2>
-          <ul class="philo__labels" aria-hidden="true">
-            <li class="philo__label is-active">Approach</li>
-            <li class="philo__label">Process</li>
-            <li class="philo__label">Craft</li>
-            <li class="philo__label">Iterate</li>
-          </ul>
+          <h2 class="loop__title" id="loop-title">How I work: a loop, not a line.</h2>
+          <p class="loop__note">Every pass makes the idea a little more useful and a little more human. Then I go round again.</p>
+          <div class="loop__steps">
+            <div class="loop__step" data-scene="observe" data-short="Observe" data-memoji="Images/Memoji/laptop.png">
+              <p class="loop__step-n">Step 1 of 6</p>
+              <h3>See what's there now</h3>
+              <p>I start with the current solution and use it the way a real person would, not the way it was meant to be used.</p>
+            </div>
+            <div class="loop__step" data-scene="pain" data-short="Pain points" data-memoji="Images/Memoji/thumbs-down.png">
+              <p class="loop__step-n">Step 2 of 6</p>
+              <h3>Find the pain points</h3>
+              <p>Where do people hesitate, backtrack or give up? Those moments become the brief.</p>
+            </div>
+            <div class="loop__step" data-scene="compare" data-short="Compare" data-memoji="Images/Memoji/shrug.png">
+              <p class="loop__step-n">Step 3 of 6</p>
+              <h3>Study the competition</h3>
+              <p>I analyse how others solve the same problem, noting what's worth learning from and what to avoid.</p>
+            </div>
+            <div class="loop__step" data-scene="ideate" data-short="Ideate" data-memoji="Images/Memoji/idea.png">
+              <p class="loop__step-n">Step 4 of 6</p>
+              <h3>Generate ideas</h3>
+              <p>Sketches, flows and rough layouts. Quantity first, judgement later.</p>
+            </div>
+            <div class="loop__step" data-scene="explore" data-short="Explore" data-memoji="Images/Memoji/celebrate.png">
+              <p class="loop__step-n">Step 5 of 6</p>
+              <h3>Explore UI with AI</h3>
+              <p>I use AI to widen the range of visual directions quickly and find a bit of flair I might not reach alone.</p>
+            </div>
+            <div class="loop__step" data-scene="critique" data-short="Critique" data-memoji="Images/Memoji/thumbs-up.png">
+              <p class="loop__step-n">Step 6 of 6</p>
+              <h3>Critique and make it human</h3>
+              <p>Then I challenge what the AI suggested, cut anything generic and shape it around real users. And assess again.</p>
+            </div>
+          </div>
         </div>
-        <div class="philo__stage">
-          <p class="philo__statement is-active">Human-centred from the start. I design for the person using it, not the person presenting it.</p>
-          <p class="philo__statement">Empathise. Define. Ideate. Prototype. Test. Not a checklist, a mindset.</p>
-          <p class="philo__statement">Inspired by Dieter Rams and Apple's attention to detail: work that feels effortless to use, but is carefully considered in every detail.</p>
-          <p class="philo__statement">Nothing is ever finished. There's always something to improve, refine or rethink. That's not a flaw in the process. It is the process.</p>
+        <div class="loop__ring">
+          <svg viewBox="0 0 560 560" aria-hidden="true">
+            <circle class="loop__track" cx="280" cy="280" r="220"/>
+            <circle class="loop__progress" cx="280" cy="280" r="220"/>
+            <g class="loop__nodes"></g>
+            <g class="loop__head"><circle class="loop__head-glow" r="18"/><circle class="loop__head-dot" r="7"/></g>
+          </svg>
+          <div class="loop__center"><div class="loop__scenes" aria-hidden="true"></div><img class="loop__memoji" src="Images/Memoji/laptop.png" alt="" width="700" height="655"></div>
         </div>
       </div>
     </div>

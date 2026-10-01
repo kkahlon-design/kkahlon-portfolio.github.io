@@ -12,7 +12,7 @@
   <link rel="apple-touch-icon" href="favicon.svg">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Schibsted+Grotesk:wght@400..900&display=swap">
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Sans+Gurmukhi:wght@600;700&family=Uncial+Antiqua&family=Schibsted+Grotesk:wght@400..900&display=swap">
   <link rel="stylesheet" href="assets/css/main.css">
   <script>
     /* Theme before paint + missing-image fallbacks (runs before any image loads) */
@@ -66,11 +66,30 @@
 
 <main id="main">
 
+  <div class="progress" aria-hidden="true"><span></span></div>
+
   <section class="about-hero" aria-labelledby="about-title">
     <div class="about-hero__text">
       <h1 class="about-hero__title" id="about-title">A bit about me.</h1>
-      <p class="about-hero__sub">UX designer. Problem solver. Driven by intuition.</p>
     </div>
+    <div class="about-hero__grid" aria-hidden="true"></div>
+    <div class="about-hero__frame" aria-hidden="true">
+      <span class="ahf__name">Karun · UX designer</span>
+      <span class="ahf__size">872 × 1000</span>
+      <i class="ahf__h ahf__h--tl"></i><i class="ahf__h ahf__h--tr"></i>
+      <span class="ahf__red ahf__red--l"><b></b></span><span class="ahf__red ahf__red--r"><b></b></span>
+    </div>
+    <div class="hpins">
+      <button class="hpin" type="button" style="--x:7%;--y:38%;--c:#12B886;--ink:#fff;--i:0" aria-label="Vegetarian. Veggie, through and through."><span class="hpin__dot"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 19c0-8 6-13 14-14 0 8-5 14-13 14M5 19l7-7"/></svg></span><span class="hpin__card" aria-hidden="true"><b>Vegetarian</b><span>Veggie, through and through</span></span></button>
+      <button class="hpin" type="button" style="--x:20%;--y:55%;--c:#EF0107;--ink:#fff;--i:1" aria-label="Arsenal. A Gooner, win or lose."><span class="hpin__dot"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3l7 3v5c0 5-3 8-7 10-4-2-7-5-7-10V6z"/><path d="M9 11h6M12 8v7"/></svg></span><span class="hpin__card" aria-hidden="true"><b>Arsenal</b><span>A Gooner, win or lose</span></span></button>
+      <button class="hpin" type="button" style="--x:8%;--y:71%;--c:#A855F7;--ink:#fff;--i:2" aria-label="Gamer. God of War is my favourite."><span class="hpin__dot"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M7 8h10a4 4 0 0 1 4 4v1a3 3 0 0 1-5.4 1.8L14.5 13h-5l-1.1 1.8A3 3 0 0 1 3 13v-1a4 4 0 0 1 4-4z"/><path d="M8 10v3M6.5 11.5h3M16 11h.01M18 12.5h.01"/></svg></span><span class="hpin__card" aria-hidden="true"><b>Gamer</b><span>God of War is my favourite</span></span></button>
+      <button class="hpin" type="button" style="--x:22%;--y:84%;--c:#E0A93B;--ink:#2A1A00;--i:3" aria-label="Marvel, GOT and LOTR. Find the relics further down."><span class="hpin__dot"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="8"/><circle cx="12" cy="12" r="4.5"/></svg></span><span class="hpin__card" aria-hidden="true"><b>Marvel, GOT and LOTR</b><span>Find the relics further down</span></span></button>
+      <button class="hpin hpin--r" type="button" style="--x:88%;--y:36%;--c:#FFFFFF;--ink:#111;--i:4" aria-label="Football. I play 7-a-side."><span class="hpin__dot"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M12 7.5l3.2 2.3-1.2 3.8h-4l-1.2-3.8zM12 3v4.5M20.5 10l-5.3-.2M17.5 19.5l-3.5-6M6.5 19.5l3.5-6M3.5 10l5.3-.2"/></svg></span><span class="hpin__card" aria-hidden="true"><b>Football</b><span>I play 7-a-side</span></span></button>
+      <button class="hpin hpin--r" type="button" style="--x:77%;--y:53%;--c:#FF6A3D;--ink:#fff;--i:5" aria-label="Gym. Training keeps me disciplined."><span class="hpin__dot"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 10v4M7 8v8M17 8v8M20 10v4M7 12h10"/></svg></span><span class="hpin__card" aria-hidden="true"><b>Gym</b><span>Training keeps me disciplined</span></span></button>
+      <button class="hpin hpin--r" type="button" style="--x:88%;--y:70%;--c:#8BE04E;--ink:#10220A;--i:6" aria-label="21 years old. Plenty of room to grow in the right team."><span class="hpin__dot"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 20v-8M12 12c0-4-3-6-7-6 0 4 3 6 7 6zM12 10c0-3 2-5 6-5 0 3-2 5-6 5"/></svg></span><span class="hpin__card" aria-hidden="true"><b>21 years old</b><span>Plenty of room to grow in the right team</span></span></button>
+      <button class="hpin hpin--r" type="button" style="--x:75%;--y:80%;--c:#3DD6F5;--ink:#062A33;--i:7" aria-label="North East England. Where I'm from."><span class="hpin__dot"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 21s-6.5-5.8-6.5-10.5a6.5 6.5 0 0 1 13 0C18.5 15.2 12 21 12 21z"/><circle cx="12" cy="10.5" r="2.4"/></svg></span><span class="hpin__card" aria-hidden="true"><b>North East England</b><span>Where I'm from</span></span></button>
+    </div>
+    <p class="hpins__hint" aria-hidden="true"><span class="hpins__hint-dot"></span><span class="only-hover">Hover the pins to get to know me</span><span class="only-touch">Tap the pins to get to know me</span></p>
     <img class="about-hero__memoji" src="Images/Memoji/wave.png" alt="Karun's memoji, waving hello" width="872" height="1000">
     <span class="about-hero__cue" aria-hidden="true">Scroll to meet me <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 5v14M6 13l6 6 6-6"/></svg></span>
   </section>
@@ -92,6 +111,7 @@
 
         <article class="chapter chapter--paper" style="--mr:-8deg">
           <div class="chapter__body">
+            <div class="chapter__fx" data-fx="trail" aria-hidden="true"></div>
             <div>
               <p class="chapter__num">1 of 3</p>
               <h3 class="chapter__title">Active by nature</h3>
@@ -106,6 +126,12 @@
 
         <article class="chapter chapter--graphite" style="--mr:6deg">
           <div class="chapter__body">
+            <div class="chapter__fx" data-fx="games" aria-hidden="true"></div>
+            <div class="relics" role="group" aria-label="Easter eggs">
+              <button class="relic gauntlet" type="button" data-snap aria-label="The Infinity Gauntlet. Snap your fingers?"></button>
+              <button class="relic ring" type="button" data-ring aria-label="The One Ring. Put it on?"></button>
+              <button class="relic throne" type="button" data-winter aria-label="The Iron Throne. Winter is coming?"></button>
+            </div>
             <div>
               <p class="chapter__num">2 of 3</p>
               <h3 class="chapter__title">Games, tech and cinema</h3>
@@ -120,75 +146,42 @@
 
         <article class="chapter chapter--accent" style="--mr:-4deg">
           <div class="chapter__body">
+            <div class="chapter__fx" data-fx="heritage" aria-hidden="true"></div>
             <div>
               <p class="chapter__num">3 of 3</p>
               <h3 class="chapter__title">Culture and curiosity</h3>
             </div>
             <div>
               <img class="chapter__memoji" src="Images/Memoji/idea.png" alt="" loading="lazy" width="511" height="700">
-              <p class="chapter__text">I'm fascinated by how culture shapes the way we think. Understanding different perspectives is key to designing things that are inclusive and meaningful.</p>
+              <p class="chapter__text">I'm British, Sikh and Panjabi, and proud of all three. I love history and the ancient world: the five rivers that gave Panjab its name, and the thought of travelling the Silk Road. Knowing where people come from is key to designing things that are inclusive and meaningful.</p>
             </div>
           </div>
           <div class="chapter__media"><img src="Images/LandingPage/Antalya arch.png" alt="Photo: an arch in Antalya" loading="lazy"></div>
         </article>
 
       </div>
-      <div class="chapters__rail" aria-hidden="true">
-        <span class="chapters__count"><b>1</b><i>/3</i></span>
-        <span class="chapters__track"><span class="chapters__fill"></span><span class="chapters__tick"></span><span class="chapters__tick"></span><span class="chapters__tick"></span></span>
-        <span class="chapters__mouse"><span></span></span>
-        <span class="chapters__hint">Scroll</span>
-      </div>
     </div>
   </section>
 
-  <section class="loop" aria-labelledby="loop-title">
-    <div class="loop__pin">
-      <div class="wrap loop__grid">
+  <section class="philo" aria-labelledby="philo-title">
+    <div class="philo__pin">
+      <div class="philo__glow" aria-hidden="true"></div>
+      <div class="wrap philo__grid">
         <div>
-          <h2 class="loop__title" id="loop-title">How I work: a loop, not a line.</h2>
-          <p class="loop__note">Every pass makes the idea a little more useful and a little more human. Then I go round again.</p>
-          <div class="loop__steps">
-            <div class="loop__step" data-scene="observe" data-short="Observe" data-memoji="Images/Memoji/laptop.png">
-              <p class="loop__step-n">Step 1 of 6</p>
-              <h3>See what's there now</h3>
-              <p>I start with the current solution and use it the way a real person would, not the way it was meant to be used.</p>
-            </div>
-            <div class="loop__step" data-scene="pain" data-short="Pain points" data-memoji="Images/Memoji/thumbs-down.png">
-              <p class="loop__step-n">Step 2 of 6</p>
-              <h3>Find the pain points</h3>
-              <p>Where do people hesitate, backtrack or give up? Those moments become the brief.</p>
-            </div>
-            <div class="loop__step" data-scene="compare" data-short="Compare" data-memoji="Images/Memoji/shrug.png">
-              <p class="loop__step-n">Step 3 of 6</p>
-              <h3>Study the competition</h3>
-              <p>I analyse how others solve the same problem, noting what's worth learning from and what to avoid.</p>
-            </div>
-            <div class="loop__step" data-scene="ideate" data-short="Ideate" data-memoji="Images/Memoji/idea.png">
-              <p class="loop__step-n">Step 4 of 6</p>
-              <h3>Generate ideas</h3>
-              <p>Sketches, flows and rough layouts. Quantity first, judgement later.</p>
-            </div>
-            <div class="loop__step" data-scene="explore" data-short="Explore" data-memoji="Images/Memoji/celebrate.png">
-              <p class="loop__step-n">Step 5 of 6</p>
-              <h3>Explore UI with AI</h3>
-              <p>I use AI to widen the range of visual directions quickly and find a bit of flair I might not reach alone.</p>
-            </div>
-            <div class="loop__step" data-scene="critique" data-short="Critique" data-memoji="Images/Memoji/thumbs-up.png">
-              <p class="loop__step-n">Step 6 of 6</p>
-              <h3>Critique and make it human</h3>
-              <p>Then I challenge what the AI suggested, cut anything generic and shape it around real users. And assess again.</p>
-            </div>
-          </div>
+          <h2 class="philo__title" id="philo-title">How I think about design</h2>
+          <ul class="philo__labels" aria-hidden="true">
+            <li class="philo__label is-active" style="--pc:#3D4BFF">Approach</li>
+            <li class="philo__label" style="--pc:#FF6A3D">Process</li>
+            <li class="philo__label" style="--pc:#12B886">Craft</li>
+            <li class="philo__label" style="--pc:#A855F7">Iterate</li>
+          </ul>
         </div>
-        <div class="loop__ring">
-          <svg viewBox="0 0 560 560" aria-hidden="true">
-            <circle class="loop__track" cx="280" cy="280" r="220"/>
-            <circle class="loop__progress" cx="280" cy="280" r="220"/>
-            <g class="loop__nodes"></g>
-            <g class="loop__head"><circle class="loop__head-glow" r="18"/><circle class="loop__head-dot" r="7"/></g>
-          </svg>
-          <div class="loop__center"><div class="loop__scenes" aria-hidden="true"></div><img class="loop__memoji" src="Images/Memoji/laptop.png" alt="" width="700" height="655"></div>
+        <div class="philo__stage">
+          <p class="philo__num" aria-hidden="true">01</p>
+          <p style="--pc:#3D4BFF" class="philo__statement is-active">Human-centred from the start. I design for the person using it, not the person presenting it.</p>
+          <p style="--pc:#FF6A3D" class="philo__statement">Empathise. Define. Ideate. Prototype. Test. Not a checklist, a mindset.</p>
+          <p style="--pc:#12B886" class="philo__statement">Inspired by Dieter Rams and Apple's attention to detail: work that feels effortless to use, but is carefully considered in every detail.</p>
+          <p style="--pc:#A855F7" class="philo__statement">Nothing is ever finished. There's always something to improve, refine or rethink. That's not a flaw in the process. It is the process.</p>
         </div>
       </div>
     </div>

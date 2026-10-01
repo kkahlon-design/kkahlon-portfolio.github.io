@@ -19,7 +19,7 @@ Keep `Projects.html` capitalised — GitHub Pages is case-sensitive and old link
 1. Copy `sfd-project.html` → `my-project.html`, swap the copy and images.
 2. Add an entry to `assets/js/projects.js` (instructions are at the top of that file).
    Give it a `category` and `start`/`end` dates ("YYYY-MM") so it lands on the Work timeline.
-It appears automatically on the home stack and the Work page (timeline and grid).
+It appears automatically on the home works wheel (if `featured`) and the Work page (timeline and grid).
 A type only shows in the Work filter once it has a live project.
 
 ## Images still to add (show a placeholder until you do)

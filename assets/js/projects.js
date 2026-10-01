@@ -1,5 +1,5 @@
 /* ==========================================================================
-   PROJECTS — one list that powers the home "Selected work" stack
+   PROJECTS — one list that powers the home "Selected work" cards
    and the Work page (timeline journey + bento grid).
 
    To add a new case study:
@@ -11,7 +11,8 @@
    5. Delete one of the "soon" placeholders if you want fewer of them.
 
    status: "live" = clickable case study, "soon" = placeholder card.
-   featured: true = shows on the home page stack (keep it to 2–3).
+   featured: true = shows as a card in the home page "Selected work" (keep it to 2–4).
+   tags: a few short skills shown as chips on the card.
    ========================================================================== */
 
 /* Project types. Each colours its timeline and acts as the key on the Work page.
@@ -37,6 +38,7 @@ window.PROJECTS = [
     end: "2025-06",
     duration: "2 weeks",
     role: "Project lead",
+    tags: ["Web design", "User research", "SEO"],
     cover: "Images/SFDProject/Mockup/Landing.png",
     coverFallback: "",
     alt: "The redesigned Systems for Dentists homepage"
@@ -54,6 +56,7 @@ window.PROJECTS = [
     end: "2024-06",
     duration: "9 months",
     role: "Solo designer",
+    tags: ["User research", "Prototyping", "UI redesign"],
     cover: "Images/UXDIProject/P2 Homepage.png",
     coverFallback: "Images/UXDIProject/Interaction Design.jpg",
     alt: "The redesigned airline booking homepage"

@@ -366,6 +366,469 @@
   }
 
   /* ------------------------------------------------------------------
+     About hero as a design canvas: selected frame, redlines, cursors
+  ------------------------------------------------------------------ */
+  function initAboutCanvas() {
+    const hero = $(".about-hero");
+    if (!hero || !$(".hpins", hero)) return;
+    const pins = $$(".hpin", hero), frame = $(".about-hero__frame", hero);
+    const live = () => hero.classList.add("is-live");
+    if (reduce) live(); else fontsReady().then(() => setTimeout(live, hero.classList.contains("from-card") ? 300 : 700));
+
+    // Hovering the memoji measures the gaps to the edges, like inspecting a layer
+    const measure = () => {
+      const h = hero.getBoundingClientRect(), f = frame.getBoundingClientRect();
+      const l = Math.round(f.left - h.left), r = Math.round(h.right - f.right);
+      frame.style.setProperty("--gap-l", l + "px");
+      frame.style.setProperty("--gap-r", r + "px");
+      $(".ahf__red--l b", frame).textContent = l;
+      $(".ahf__red--r b", frame).textContent = r;
+    };
+    frame.addEventListener("pointerenter", measure);
+
+    // Pins drift slightly with the pointer; tap (or click) pins a card open
+    if (fine && !reduce) {
+      hero.addEventListener("pointermove", (e) => {
+        const r = hero.getBoundingClientRect();
+        const mx = ((e.clientX - r.left) / r.width - 0.5).toFixed(3), my = ((e.clientY - r.top) / r.height - 0.5).toFixed(3);
+        pins.forEach((p, i) => { const k = i % 2 ? -1 : 1; p.style.setProperty("--mx", mx * k); p.style.setProperty("--my", my * k); });
+      });
+    }
+    const closeAll = () => pins.forEach((p) => { p.classList.remove("is-open"); p.setAttribute("aria-expanded", "false"); });
+    pins.forEach((p) => {
+      p.setAttribute("aria-expanded", "false");
+      p.addEventListener("click", () => {
+        const open = !p.classList.contains("is-open");
+        closeAll();
+        p.classList.toggle("is-open", open);
+        p.setAttribute("aria-expanded", String(open));
+      });
+    });
+    d.addEventListener("click", (e) => { if (!e.target.closest(".hpin")) closeAll(); });
+    d.addEventListener("keydown", (e) => { if (e.key === "Escape") closeAll(); });
+  }
+
+  /* ------------------------------------------------------------------
+     Chapter effects: contextual decoration for each interest
+  ------------------------------------------------------------------ */
+  const FX = {
+    trail() {
+      let topo = "";
+      for (let k = 0; k < 8; k++) {
+        const r = 36 + k * 34;
+        let d = "";
+        for (let a = 0; a <= 72; a++) {
+          const t = (a / 72) * Math.PI * 2;
+          const rr = r + Math.sin(t * 3 + k) * 9 + Math.cos(t * 5 - k * 0.7) * 5;
+          d += (a ? "L" : "M") + (430 + Math.cos(t) * rr * 1.3).toFixed(1) + " " + (210 + Math.sin(t) * rr).toFixed(1);
+        }
+        topo += `<path d="${d}Z"/>`;
+      }
+      const D = "M12 186C70 182 80 140 130 138S200 128 220 96S300 60 330 52S370 34 384 26";
+      return `<svg class="fx-topo" viewBox="0 0 600 600" preserveAspectRatio="xMidYMid slice">${topo}</svg>
+        <svg class="fx-route" viewBox="0 0 400 200">
+          <defs><mask id="route-mask" maskUnits="userSpaceOnUse" x="-20" y="-60" width="440" height="280"><path class="fx-route__mask fxd" style="--d:0.08;--sp:1.5" pathLength="1" d="${D}"/></mask></defs>
+          <circle class="fx-route__start" cx="12" cy="186" r="5"/>
+          <path class="fx-route__path" pathLength="1" d="${D}" mask="url(#route-mask)"/>
+          <g class="fxp" style="--d:0.72"><g class="fx-flag" transform="translate(384 26)"><path d="M0 0V-30"/><path d="M0-30h22l-6 7 6 7H0z"/></g></g>
+        </svg>
+        <p class="fx-elev"><b data-elev="1085">0</b> m<span>Snowdon summit</span></p>`;
+    },
+    games() {
+      return `<div class="fx-halftone"></div>`;
+    },
+    heritage() {
+      // Pre-partition (Sanjha) Panjab, drawn from approximate lon/lat of the old province's edge.
+      // West wing: Dera Ghazi Khan to Bahawalpur; east wing: Kangra and Shimla down to Gurgaon.
+      const P = ([lon, lat]) => [((lon - 69.3) * 40).toFixed(1), ((34.3 - lat) * 46).toFixed(1)];
+      const edge = [[72.2, 33.95], [73.0, 34.05], [73.6, 33.4], [74.5, 32.85], [75.4, 32.4], [76.2, 32.75], [77.0, 32.9], [77.8, 32.85], [78.4, 32.2],
+        [78.0, 31.3], [77.6, 30.4], [77.3, 29.5], [77.4, 28.6], [77.2, 27.9], [76.3, 28.0], [75.4, 28.6], [74.6, 29.5], [73.9, 29.95],
+        [73.3, 29.4], [72.4, 28.4], [71.0, 27.85], [70.0, 28.5], [69.55, 29.5], [70.1, 30.6], [70.7, 31.6], [71.1, 32.5], [71.8, 33.2]];
+      const outline = "M" + edge.map((p) => P(p).join(" ")).join("L") + "Z";
+      const line = (pts) => "M" + pts.map((p) => P(p).join(" ")).join("L");
+      // The five rivers, west to east, meeting the Indus system at Panjnad
+      const rivers = [
+        ["Jhelum", [[73.65, 33.15], [73.5, 32.7], [73.0, 32.2], [72.6, 31.7], [72.15, 31.15]], [73.75, 33.35]],
+        ["Chenab", [[74.7, 32.85], [74.1, 32.4], [73.4, 31.9], [72.7, 31.5], [72.15, 31.15], [71.7, 30.4], [71.3, 29.8], [71.0, 29.35]], [74.85, 33.05]],
+        ["Ravi", [[75.6, 32.4], [75.0, 32.0], [74.3, 31.55], [73.5, 31.0], [72.6, 30.7], [71.95, 30.6]], [75.75, 32.6]],
+        ["Beas", [[77.2, 32.25], [76.6, 31.95], [76.0, 31.75], [75.4, 31.45], [74.95, 31.15]], [77.35, 32.5]],
+        ["Sutlej", [[78.4, 31.75], [77.3, 31.35], [76.5, 31.0], [75.8, 30.95], [74.95, 31.15], [74.55, 30.85], [73.6, 30.2], [72.6, 29.75], [71.0, 29.35]], [78.0, 32.05]]
+      ];
+      const [px, py] = P([71.0, 29.35]);
+      return `<div class="fx-gurmukhi fxp" style="--d:0.2"><b lang="pa">ਸਤਿ ਸ੍ਰੀ ਅਕਾਲ</b><span>Sat Sri Akaal · Hello</span></div>
+        <svg class="fx-panjab" viewBox="0 0 380 310" aria-hidden="true">
+          <path class="land fxp" style="--d:0" d="${outline}"/>
+          ${rivers.map(([n, pts, lab], i) => {
+            const dd = line(pts), [lx, ly] = P(lab);
+            return `<path class="river fxd" style="--d:${0.1 + i * 0.07}" pathLength="1" d="${dd}"/><path class="flow" pathLength="1" d="${dd}" style="animation-delay:${-i * 0.6}s"/><text x="${lx}" y="${ly}">${n}</text>`;
+          }).join("")}
+          <circle class="confluence" cx="${px}" cy="${py}" r="4"/>
+          <text class="cap" x="${px}" y="${(+py + 20).toFixed(1)}"><tspan class="gm" lang="pa">ਪੰਜਾਬ</tspan> · five waters</text>
+        </svg>`;
+    }
+  };
+  function initChapterFx() {
+    $$(".chapter__fx[data-fx]").forEach((host) => { const b = FX[host.dataset.fx]; if (b) host.innerHTML = b(); });
+    if (reduce) $$("[data-elev]").forEach((el) => (el.textContent = (+el.dataset.elev).toLocaleString("en-GB")));
+    if (reduce) $$(".chapter [data-path]").forEach((el) => follow(el, 1));
+  }
+
+  /* ------------------------------------------------------------------
+     Easter egg: the gauntlet. Click to snap — half the page turns to
+     dust (real sampled pixels drifting away); "Undo the snap" or Esc
+     plays the same timeline backwards and rebuilds it.
+  ------------------------------------------------------------------ */
+  const relicTip = (t) => `<span class="relic__tip" aria-hidden="true">${t}</span>`;   // fixed strings only
+  // Fingers fold into a fist; the thumb crosses the front and does the snapping
+  const GAUNTLET = `<svg viewBox="0 0 64 72" aria-hidden="true">
+    <defs><linearGradient id="g-gold" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#FFE29A"/><stop offset=".45" stop-color="#E0A93B"/><stop offset="1" stop-color="#8A5A12"/></linearGradient></defs>
+    <g class="g-burst"><path d="M46 22l6-6M50 31h8M46 40l6 6"/></g>
+    <rect class="g-gold g-finger" x="15" y="8" width="8" height="22" rx="4"/>
+    <rect class="g-gold g-finger" x="24" y="5" width="8" height="25" rx="4"/>
+    <rect class="g-gold g-finger" x="33" y="7" width="8" height="23" rx="4"/>
+    <rect class="g-gold g-finger" x="42" y="12" width="7" height="18" rx="3.5"/>
+    <rect class="g-gold" x="12" y="26" width="40" height="28" rx="9"/>
+    <rect class="g-gold" x="15" y="52" width="32" height="16" rx="3"/>
+    <path d="M15 58h32" stroke="#6B4A12" stroke-width="1"/>
+    <circle class="g-stone" cx="19" cy="31" r="2.6" fill="#FF3B3B" style="--t:0s"/>
+    <circle class="g-stone" cx="28" cy="31" r="2.6" fill="#3B82FF" style="--t:.4s"/>
+    <circle class="g-stone" cx="37" cy="31" r="2.6" fill="#B04BFF" style="--t:.8s"/>
+    <circle class="g-stone" cx="45.5" cy="32" r="2.4" fill="#2BD46A" style="--t:1.2s"/>
+    <circle class="g-stone" cx="32" cy="43" r="4" fill="#FFD83B" style="--t:2s"/>
+    <g class="g-thumb"><rect class="g-gold" x="6.5" y="27" width="9" height="22" rx="4.5"/><circle class="g-stone" cx="11" cy="33" r="2.4" fill="#FF9A2B" style="--t:1.6s"/></g>
+  </svg>${relicTip("Snap?")}`;
+  const THRONE = (() => {
+    let blades = "";
+    [-50, -38, -26, -13, 0, 13, 26, 38, 50].forEach((a) => {
+      const t = (a * Math.PI) / 180, L = 32 - Math.abs(a) / 4;
+      blades += `<path class="th-blade" style="--fan:${(a * 0.2).toFixed(1)}deg" d="M32 40L${(32 + Math.sin(t) * L).toFixed(1)} ${(40 - Math.cos(t) * L).toFixed(1)}"/>`;
+    });
+    return `<svg viewBox="0 0 64 72" aria-hidden="true">
+      <defs><linearGradient id="th-steel" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#C9D1D9"/><stop offset="1" stop-color="#4A535C"/></linearGradient></defs>
+      ${blades}
+      <rect class="th-steel" x="10" y="34" width="8" height="18" rx="2"/><rect class="th-steel" x="46" y="34" width="8" height="18" rx="2"/>
+      <rect class="th-steel" x="16" y="38" width="32" height="12" rx="2"/>
+      <rect class="th-steel" x="12" y="50" width="40" height="8" rx="1.5"/>
+      <rect class="th-steel" x="7" y="58" width="50" height="9" rx="1.5"/>
+    </svg>${relicTip("Winter is coming?")}`;
+  })();
+
+  const RING = `<svg viewBox="0 0 40 46" aria-hidden="true">
+    <defs><linearGradient id="rg-gold" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#FFF1B0"/><stop offset=".4" stop-color="#E8B33A"/><stop offset=".75" stop-color="#9C6512"/><stop offset="1" stop-color="#F7D27A"/></linearGradient></defs>
+    <ellipse class="rg-band" cx="20" cy="26" rx="13" ry="10"/>
+    <path class="rg-shine" d="M10 21 Q14 16 22 16"/>
+  </svg>${relicTip("Put it on?")}`;
+
+  /* Lord of the Rings: put on the One Ring. The world drains to grey, Barad-dûr rises
+     and the Eye follows your cursor. Take it off (or Esc) to come back. */
+  function initRing() {
+    const btn = $("[data-ring]");
+    if (!btn) return;
+    btn.innerHTML = RING;
+    // The Ring-verse in the Black Speech (transliterated; the Tengwar script isn't available as a web font)
+    const SCRIPT = "Ash nazg durbatulûk · ash nazg gimbatul · ash nazg thrakatulûk · agh burzum-ishi krimpatul ·";
+    let ov = null, onMove = null;
+    const takeOff = () => {
+      if (!ov || ov.classList.contains("is-leaving")) return;
+      const node = ov;
+      node.classList.add("is-leaving");
+      removeEventListener("pointermove", onMove);
+      removeEventListener("pointerdown", onMove);
+      setTimeout(() => { node.remove(); if (ov === node) ov = null; btn.focus({ preventScroll: true }); }, 700);
+    };
+    btn.addEventListener("click", () => {
+      if (ov) return;
+      let windows = "";
+      [[132, 300], [168, 300], [150, 360], [122, 430], [178, 430], [150, 500], [110, 560], [190, 560], [150, 620]].forEach(([x, y], i) => {
+        windows += `<rect class="rw-window" x="${x - 2.5}" y="${y}" width="5" height="9" rx="1" style="--t:${(-i * 0.4).toFixed(1)}s"/>`;
+      });
+      ov = d.createElement("div");
+      ov.className = "ringworld";
+      ov.setAttribute("role", "dialog");
+      ov.setAttribute("aria-modal", "true");
+      ov.setAttribute("aria-label", "Wearing the One Ring");
+      ov.innerHTML = `<div class="ringworld__haze"></div>
+        <div class="ringworld__ring" aria-hidden="true"><svg viewBox="0 0 400 400">
+          <defs>
+            <linearGradient id="rw-gold" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#FFF1B0"/><stop offset=".35" stop-color="#E8B33A"/><stop offset=".7" stop-color="#9C6512"/><stop offset="1" stop-color="#F7D27A"/></linearGradient>
+            <path id="rw-path" d="M50 200A150 150 0 1 1 350 200A150 150 0 1 1 50 200"/>
+          </defs>
+          <g class="spin">
+            <circle class="rw-band" cx="200" cy="200" r="150"/>
+            <circle class="rw-edge" cx="200" cy="200" r="170"/><circle class="rw-edge" cx="200" cy="200" r="130"/>
+            <text class="rw-script" dy="5"><textPath href="#rw-path" textLength="930" lengthAdjust="spacingAndGlyphs">${SCRIPT}</textPath></text>
+          </g>
+        </svg></div>
+        <div class="ringworld__caption"><p>You put on the Ring.</p><small>The Eye is watching. <span class="only-hover">Move your cursor.</span><span class="only-touch">Tap anywhere.</span></small></div>
+        <div class="ringworld__tower" aria-hidden="true"><svg viewBox="0 0 300 800">
+          <defs>
+            <radialGradient id="rw-eyeglow"><stop offset="0" stop-color="#FFB347" stop-opacity=".9"/><stop offset=".45" stop-color="#FF4D00" stop-opacity=".55"/><stop offset="1" stop-color="#FF2A00" stop-opacity="0"/></radialGradient>
+            <radialGradient id="rw-iris"><stop offset="0" stop-color="#FFF2A8"/><stop offset=".35" stop-color="#FFB13B"/><stop offset=".75" stop-color="#FF5A0A"/><stop offset="1" stop-color="#A81E00"/></radialGradient>
+          </defs>
+          <path class="rw-tower" d="M0 800L40 640L62 500L82 470L92 380L102 360L110 262L120 240L126 150L106 40L136 112L150 128L164 112L194 40L174 150L180 240L190 262L198 360L208 380L218 470L238 500L260 640L300 800Z"/>
+          ${windows}
+          <ellipse class="rw-eye-glow" cx="150" cy="86" rx="78" ry="40"/>
+          <path class="rw-eye" d="M102 86Q150 52 198 86Q150 120 102 86Z"/>
+          <ellipse class="rw-pupil" cx="150" cy="86" rx="5" ry="25"/>
+          <path class="rw-lid rw-lid--top" d="M98 86Q150 44 202 86Z"/><path class="rw-lid rw-lid--bot" d="M98 86Q150 128 202 86Z"/>
+        </svg></div>
+        <button class="ringworld__off" type="button">Take off the Ring</button>`;
+      d.body.appendChild(ov);
+      const off = $(".ringworld__off", ov), pupil = $(".rw-pupil", ov), eye = $(".rw-eye", ov);
+      off.addEventListener("click", takeOff);
+      off.focus({ preventScroll: true });
+      ov.addEventListener("keydown", (e) => {
+        if (e.key === "Escape") takeOff();
+        if (e.key === "Tab") { e.preventDefault(); off.focus(); }
+      });
+      // The Eye follows the pointer (or your finger)
+      onMove = (e) => {
+        const r = eye.getBoundingClientRect();
+        const dx = e.clientX - (r.left + r.width / 2), dy = e.clientY - (r.top + r.height / 2);
+        const k = Math.min(1, Math.hypot(dx, dy) / 260);
+        const a = Math.atan2(dy, dx);
+        pupil.style.transform = `translate(${(Math.cos(a) * k * 30).toFixed(1)}px, ${(Math.sin(a) * k * 9).toFixed(1)}px)`;
+      };
+      if (!reduce) { addEventListener("pointermove", onMove, { passive: true }); addEventListener("pointerdown", onMove, { passive: true }); }
+    });
+  }
+
+  /* Game of Thrones: winter comes to the page for a few seconds */
+  function initWinter() {
+    const btn = $("[data-winter]");
+    if (!btn) return;
+    btn.innerHTML = THRONE;
+    let run = null;
+    const stop = () => {
+      if (!run) return;
+      const r = run; run = null;
+      cancelAnimationFrame(r.raf); clearTimeout(r.timer);
+      r.chip.classList.add("is-leaving");
+      r.cv.style.transition = "opacity 0.6s"; r.cv.style.opacity = "0";
+      setTimeout(() => { r.cv.remove(); r.chip.remove(); }, 650);
+    };
+    btn.addEventListener("click", () => {
+      if (run) return stop();
+      const cv = d.createElement("canvas"), chip = d.createElement("div");
+      cv.className = "winter"; cv.setAttribute("aria-hidden", "true");
+      chip.className = "winter__chip"; chip.setAttribute("role", "status"); chip.textContent = "Winter is coming";
+      d.body.append(cv, chip);
+      const dpr = Math.min(2, devicePixelRatio || 1);
+      const W = (cv.width = innerWidth * dpr), H = (cv.height = innerHeight * dpr);
+      cv.style.width = "100vw"; cv.style.height = "100vh";
+      const g = cv.getContext("2d");
+      const flakes = reduce ? [] : Array.from({ length: 170 }, () => ({ x: Math.random() * W, y: Math.random() * -H, r: (0.8 + Math.random() * 2.4) * dpr, v: (0.6 + Math.random() * 1.4) * dpr, s: Math.random() * 6.28 }));
+      run = { cv, chip, raf: 0, timer: setTimeout(stop, 7000) };
+      const tick = () => {
+        g.clearRect(0, 0, W, H);
+        g.fillStyle = "rgba(240, 248, 255, 0.85)";
+        flakes.forEach((f) => {
+          f.y += f.v; f.s += 0.02; f.x += Math.sin(f.s) * 0.6 * dpr;
+          if (f.y > H) { f.y = -10; f.x = Math.random() * W; }
+          g.beginPath(); g.arc(f.x, f.y, f.r, 0, 6.283); g.fill();
+        });
+        if (run) run.raf = requestAnimationFrame(tick);
+      };
+      tick();
+    });
+  }
+
+  function parseColour(str) {
+    let m = /rgba?\(\s*([\d.]+)[,\s]+([\d.]+)[,\s]+([\d.]+)(?:\s*[,/]\s*([\d.]+%?))?/.exec(str);
+    if (m) return [+m[1], +m[2], +m[3], m[4] == null ? 1 : m[4].endsWith("%") ? parseFloat(m[4]) / 100 : +m[4]];
+    m = /color\(srgb\s+([\d.]+)\s+([\d.]+)\s+([\d.]+)(?:\s*\/\s*([\d.]+))?/.exec(str);
+    if (m) return [m[1] * 255, m[2] * 255, m[3] * 255, m[4] == null ? 1 : +m[4]];
+    return null;
+  }
+
+  function initSnap() {
+    const trigger = $("[data-snap]");
+    if (!trigger) return;
+    trigger.innerHTML = GAUNTLET;
+    const SEL = [".nav__brand", ".nav__link", ".theme-toggle", ".about-hero__title", ".about-hero__sub", ".about-hero__memoji", ".hpin",
+      ".intro__label", ".intro__text", ".chapter__num", ".chapter__title", ".chapter__text", ".chapter__memoji", ".chapter__media",
+      ".fx-panjab", ".fx-gurmukhi", ".fx-elev", ".fx-route",
+      ".philo__title", ".philo__label", ".philo__statement.is-active", ".contact__title", ".contact__row .btn", ".contact__memoji",
+      ".footer p", ".footer__links a"].join(",");
+    const SWEEP = 0.8, SCATTER = 0.35, LIFE = 1.3;   // seconds
+    let state = "idle", victims = [], undo = null, canvas = null;
+
+    const hiddenChapter = (el) => { const c = el.closest(".chapter"); return c && c.getAttribute("aria-hidden") === "true"; };
+    const onScreen = (el) => {
+      const r = el.getBoundingClientRect();
+      return r.width > 2 && r.height > 2 && r.bottom > 0 && r.top < innerHeight && r.right > 0 && r.left < innerWidth && !hiddenChapter(el);
+    };
+
+    // Turn an element into a list of coloured cells (its "pixels")
+    function pixelsOf(el, budget) {
+      const r = el.getBoundingClientRect();
+      const s = Math.max(3, Math.ceil(Math.sqrt((r.width * r.height) / budget)));
+      const out = [];
+      const add = (x, y, c) => { if (c && c[3] > 0.05) out.push({ x, y, c, f: (x - r.left) / Math.max(1, r.width) }); };
+      const img = el.tagName === "IMG" ? el : $("img", el);
+      let drew = false;
+      if (img && img.complete && img.naturalWidth && !img.closest(".has-missing")) {
+        try {
+          const ir = img.getBoundingClientRect();
+          const cw = Math.max(1, Math.ceil(r.width / s)), ch = Math.max(1, Math.ceil(r.height / s));
+          const cv = d.createElement("canvas"); cv.width = cw; cv.height = ch;
+          const g = cv.getContext("2d");
+          const cover = getComputedStyle(img).objectFit === "cover";
+          let sx = 0, sy = 0, sw = img.naturalWidth, sh = img.naturalHeight;
+          if (cover) {
+            const k = Math.max(ir.width / sw, ir.height / sh);
+            const vw = ir.width / k, vh = ir.height / k;
+            sx = (sw - vw) / 2; sy = getComputedStyle(img).objectPosition.startsWith("50% 0") ? 0 : (sh - vh) / 2; sw = vw; sh = vh;
+          }
+          g.drawImage(img, sx, sy, sw, sh, (ir.left - r.left) / s, (ir.top - r.top) / s, ir.width / s, ir.height / s);
+          const data = g.getImageData(0, 0, cw, ch).data;
+          for (let j = 0; j < ch; j++) for (let i = 0; i < cw; i++) {
+            const o = (j * cw + i) * 4;
+            if (data[o + 3] > 60) add(r.left + i * s, r.top + j * s, [data[o], data[o + 1], data[o + 2], data[o + 3] / 255]);
+          }
+          drew = out.length > 0;
+        } catch (e) { drew = false; }
+      }
+      if (!drew) {
+        const cs = getComputedStyle(el);
+        const bg = parseColour(cs.backgroundColor), fg = parseColour(cs.color) || [255, 255, 255, 1];
+        if (bg && bg[3] > 0.1) {
+          for (let y = r.top; y < r.bottom; y += s) for (let x = r.left; x < r.right; x += s) add(x, y, bg);
+        }
+        const range = d.createRange();
+        range.selectNodeContents(el);
+        const lines = Array.from(range.getClientRects());
+        const ink = bg && bg[3] > 0.1 ? 0.25 : 0.5;
+        lines.forEach((lr) => {
+          for (let y = lr.top + lr.height * 0.18; y < lr.bottom - lr.height * 0.12; y += s)
+            for (let x = lr.left; x < lr.right; x += s) if (Math.random() < ink) add(x, y, fg);
+        });
+        if (!out.length) {   // SVG art and the like: sample its stroke/fill colour sparsely
+          const svgCol = el.querySelector("path, circle, ellipse") ? parseColour(getComputedStyle(el.querySelector("path, circle, ellipse")).stroke) || parseColour(getComputedStyle(el.querySelector("path, circle, ellipse")).fill) : null;
+          for (let y = r.top; y < r.bottom; y += s) for (let x = r.left; x < r.right; x += s) if (Math.random() < 0.3) add(x, y, svgCol || fg);
+        }
+      }
+      // where each pixel blows to, and when it lets go
+      out.forEach((p) => {
+        p.s = s;
+        p.del = p.f * SWEEP + Math.random() * SCATTER;
+        p.dx = 60 + Math.random() * 240;
+        p.dy = -(40 + Math.random() * 200);
+        p.w = Math.random() * 6.28;
+        p.life = LIFE * (0.7 + Math.random() * 0.6);
+      });
+      return out;
+    }
+
+    function ensureCanvas() {
+      if (!canvas) {
+        canvas = d.createElement("canvas");
+        canvas.className = "dust";
+        canvas.setAttribute("aria-hidden", "true");
+        d.body.appendChild(canvas);
+      }
+      canvas.width = innerWidth; canvas.height = innerHeight;
+      return canvas;
+    }
+
+    // One timeline, played forwards (snap) or backwards (restore)
+    function play(list, backwards) {
+      return new Promise((done) => {
+        const cv = ensureCanvas(), ctx = cv.getContext("2d");
+        const W = cv.width, H = cv.height;
+        const frame = ctx.createImageData(W, H), buf = new Uint32Array(frame.data.buffer);
+        const parts = list.flatMap((v) => v.parts);
+        const total = Math.max(SWEEP + SCATTER + LIFE * 1.3, ...parts.map((p) => p.del + p.life));
+        const t0 = performance.now();
+        const tick = (now) => {
+          const el = (now - t0) / 1000;
+          const t = backwards ? total - el : el;
+          buf.fill(0);
+          for (let i = 0; i < parts.length; i++) {
+            const p = parts[i];
+            if (t < p.f * SWEEP) continue;              // still part of the element
+            const k = clamp((t - p.del) / p.life);
+            if (k >= 1) continue;
+            const e = k * k;
+            const x = (p.x + p.dx * e + Math.sin(p.w + k * 7) * 10 * k) | 0;
+            const y = (p.y + p.dy * e) | 0;
+            const a = ((1 - k) * p.c[3] * 255) | 0;
+            const col = (a << 24) | ((p.c[2] & 255) << 16) | ((p.c[1] & 255) << 8) | (p.c[0] & 255);
+            const sz = Math.max(1, (p.s * (1 - k * 0.5)) | 0);
+            for (let yy = y; yy < y + sz; yy++) {
+              if (yy < 0 || yy >= H) continue;
+              const row = yy * W;
+              for (let xx = x; xx < x + sz; xx++) if (xx >= 0 && xx < W) buf[row + xx] = col;
+            }
+          }
+          ctx.putImageData(frame, 0, 0);
+          // each element is wiped away left to right, in step with its pixels letting go
+          const w = clamp(t / SWEEP) * 100;
+          list.forEach((v) => (v.el.style.clipPath = `inset(-2px -2px -2px calc(${w.toFixed(2)}% - 2px))`));
+          if (backwards ? t > 0 : t < total) requestAnimationFrame(tick);
+          else { ctx.clearRect(0, 0, W, H); done(); }
+        };
+        requestAnimationFrame(tick);
+      });
+    }
+
+    function showUndo() {
+      undo = d.createElement("div");
+      undo.className = "unsnap";
+      undo.setAttribute("role", "status");
+      undo.innerHTML = `<p>Half the page, gone.</p><button type="button" class="btn btn--accent">${label("Undo the snap")}</button>`;
+      d.body.appendChild(undo);
+      const b = $("button", undo);
+      b.addEventListener("click", restore);
+      b.focus({ preventScroll: true });
+    }
+
+    async function snap() {
+      if (state !== "idle") return;
+      state = "snapping";
+      trigger.classList.add("is-snapping");
+      await new Promise((r) => setTimeout(r, reduce ? 0 : 520));
+      const all = $$(SEL).filter((el) => !el.contains(trigger) && !el.closest(".is-dusted") && el.getClientRects().length);
+      for (let i = all.length - 1; i > 0; i--) { const j = (Math.random() * (i + 1)) | 0; [all[i], all[j]] = [all[j], all[i]]; }
+      const vis = all.filter(onScreen), rest = all.filter((el) => !vis.includes(el));
+      const near = vis.slice(0, Math.ceil(vis.length / 2)), far = rest.slice(0, Math.ceil(rest.length / 2));
+      victims = [...near, ...far];
+      far.forEach((el) => el.classList.add("is-dusted"));
+      if (!reduce && near.length) {
+        const budget = Math.min(4000, 30000 / near.length);
+        const list = near.map((el) => ({ el, parts: pixelsOf(el, budget) }));
+        await play(list, false);
+      }
+      near.forEach((el) => { el.classList.add("is-dusted"); el.style.clipPath = ""; });
+      trigger.classList.remove("is-snapping");
+      state = "dusted";
+      showUndo();
+    }
+
+    async function restore() {
+      if (state !== "dusted") return;
+      state = "restoring";
+      if (undo) { undo.remove(); undo = null; }
+      const near = victims.filter(onScreen), far = victims.filter((el) => !near.includes(el));
+      far.forEach((el) => el.classList.remove("is-dusted"));
+      if (!reduce && near.length) {
+        const budget = Math.min(4000, 30000 / near.length);
+        const list = near.map((el) => ({ el, parts: pixelsOf(el, budget) }));
+        list.forEach((v) => { v.el.style.clipPath = "inset(0 0 0 100%)"; v.el.classList.remove("is-dusted"); });
+        await play(list, true);
+      }
+      near.forEach((el) => { el.classList.remove("is-dusted"); el.style.clipPath = ""; });
+      victims = [];
+      state = "idle";
+      trigger.focus({ preventScroll: true });
+    }
+
+    trigger.addEventListener("click", snap);
+    d.addEventListener("keydown", (e) => { if (e.key === "Escape" && state === "dusted") restore(); });
+    addEventListener("resize", () => { if (canvas && state === "idle") { canvas.width = canvas.height = 0; } });
+  }
+
+  /* ------------------------------------------------------------------
      Project rendering from window.PROJECTS
   ------------------------------------------------------------------ */
   const esc = (s) => String(s ?? "").replace(/[&<>"']/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]));
@@ -373,49 +836,9 @@
   const imgTag = (p, cls = "") =>
     `<img ${cls ? `class="${cls}"` : ""} src="${esc(p.cover)}" alt="${esc(p.alt || p.title)}" loading="lazy" decoding="async"${p.coverFallback ? ` data-fallback="${esc(p.coverFallback)}"` : ""}>`;
 
-  function renderStack() {
-    const host = $("#stack");
-    if (!host || !window.PROJECTS) return;
-    const list = window.PROJECTS.filter((p) => p.featured);
-    host.innerHTML = list.map((p, i) => {
-      if (p.status === "soon") {
-        return `<li class="stack__item" style="--i:${i}">
-          <div class="work-card work-card--soon">
-            <div class="work-card__body">
-              <div>
-                <span class="status-pill">${esc(p.client)}</span>
-                <h3 class="work-card__title">${esc(p.title)}</h3>
-                <p class="work-card__summary">${esc(p.summary)}</p>
-              </div>
-              <div><a class="btn btn--ghost" href="https://www.linkedin.com/in/karun-kahlon-783655301/" target="_blank" rel="noopener noreferrer">${label("Ask me about it")}<svg class="btn__icon btn__icon--ne" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 17 17 7M9 7h8v8"/></svg></a></div>
-            </div>
-            <div class="work-card__media"><img src="${esc(p.memoji)}" alt="" loading="lazy"></div>
-          </div></li>`;
-      }
-      return `<li class="stack__item" style="--i:${i}">
-        <a class="work-card" href="${esc(p.href)}" data-cursor="View case study">
-          <div class="work-card__body">
-            <div>
-              <p class="work-card__kicker">${esc(p.client)}</p>
-              <h3 class="work-card__title">${esc(p.title)}</h3>
-              <p class="work-card__summary">${esc(p.summary)}</p>
-            </div>
-            <div>
-              <dl class="work-card__meta">
-                <div><dt>Year</dt><dd>${esc(p.year)}</dd></div>
-                <div><dt>Timeframe</dt><dd>${esc(p.duration)}</dd></div>
-                <div><dt>Role</dt><dd>${esc(p.role)}</dd></div>
-              </dl>
-              <span class="btn btn--accent work-card__cta">${label("Read case study")}<svg class="btn__icon btn__icon--e" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg></span>
-            </div>
-          </div>
-          <div class="work-card__media">${imgTag(p)}</div>
-        </a></li>`;
-    }).join("");
-  }
-
   /* ------------------------------------------------------------------
-     Work page: type filter (colour key) + timeline journey + bento grid
+     Shared project helpers + home "Selected work" cards
+     (plain cards in normal scroll: quick to load, easy to scan)
   ------------------------------------------------------------------ */
   const MONTHS = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
   const monthIndex = (s) => { const [y, m] = String(s).split("-").map(Number); return y * 12 + (m || 1) - 1; };
@@ -427,6 +850,51 @@
   const pad2 = (n) => String(n).padStart(2, "0");
   const ARROW_E = '<svg class="btn__icon btn__icon--e" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg>';
 
+  function initWorks() {
+    const host = $("#pcards");
+    if (!host || !window.PROJECTS) return;
+    const CATS = window.CATEGORIES || [];
+    const catOf = (p) => CATS.find((c) => c.id === p.category);
+    const NE = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 17 17 7M9 7h8v8"/></svg>';
+    const SPIN = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M12 3v3M12 18v3M3 12h3M18 12h3M5.6 5.6l2.1 2.1M16.3 16.3l2.1 2.1M5.6 18.4l2.1-2.1M16.3 7.7l2.1-2.1"/></svg>';
+    const featured = window.PROJECTS.filter((p) => p.featured);
+    host.innerHTML = featured.map((p, i) => {
+      const flip = i % 2 ? " pcard--flip" : "";
+      if (p.status === "soon") {
+        return `<article class="pcard pcard--soon${flip}" style="--c:#8C95FF"><div class="pcard__link">
+          <div class="pcard__body">
+            <p class="pcard__meta"><span class="pcard__cat"><i></i>${esc(p.client)}</span><span>${esc(p.year)}</span></p>
+            <h3 class="pcard__title">${esc(p.title)}</h3>
+            <p class="pcard__lede">${esc(p.summary)}</p>
+            <span class="pcard__soon">${SPIN}Coming soon</span>
+          </div>
+          <div class="pcard__media"><img src="${esc(p.memoji)}" alt="" loading="lazy"></div>
+        </div></article>`;
+      }
+      const c = catOf(p) || { label: "Project", colour: "#3D4BFF" };
+      const when = p.start ? whenText(p) : p.year;
+      return `<article class="pcard${flip}" style="--c:${esc(c.colour)}"><a class="pcard__link" href="${esc(p.href)}">
+        <div class="pcard__body">
+          <p class="pcard__meta"><span class="pcard__cat"><i></i>${esc(c.label)}</span><span>${esc(p.year)}</span></p>
+          <h3 class="pcard__title">${esc(p.title)}</h3>
+          <p class="pcard__lede">${esc(p.summary)}</p>
+          ${p.tags ? `<ul class="pcard__tags">${p.tags.map((t) => `<li>${esc(t)}</li>`).join("")}</ul>` : ""}
+          <dl class="pcard__facts"><div><dt>Role</dt><dd>${esc(p.role)}</dd></div><div><dt>Timeline</dt><dd>${esc(p.duration)} · ${esc(when)}</dd></div></dl>
+          <span class="pcard__cta">View case study ${NE}</span>
+        </div>
+        <div class="pcard__media">${imgTag(p)}</div>
+      </a></article>`;
+    }).join("");
+    // fade each card up as it arrives
+    const cards = $$(".pcard", host);
+    if (reduce || !("IntersectionObserver" in window)) { cards.forEach((c) => c.classList.add("is-in")); return; }
+    const io = new IntersectionObserver((es) => es.forEach((e) => { if (e.isIntersecting) { e.target.classList.add("is-in"); io.unobserve(e.target); } }), { rootMargin: "0px 0px -10% 0px" });
+    cards.forEach((c) => io.observe(c));
+  }
+
+  /* ------------------------------------------------------------------
+     Work page: type filter (colour key) + timeline journey + bento grid
+  ------------------------------------------------------------------ */
   function initWork() {
     const journey = $("#journey");
     if (!journey || !window.PROJECTS) return;
@@ -446,7 +914,7 @@
     let filter = new URLSearchParams(location.search).get("type");
     if (!cats.some((c) => c.id === filter)) filter = "all";
     let view = store.get("kk-work-view") === "grid" ? "grid" : "journey";
-    let list = [], panels = [], spans = [], ruler = null, win = null, readout = null;
+    let list = [], panels = [], spans = [], win = null, readout = null;
     let top = 0, PX = 28, ends = [], starts = [], lastLabel = "", isStatic = false;
 
     /* Filter chips — the key for the timeline colours */
@@ -472,27 +940,31 @@
       panelsHost.innerHTML = list.map((p, i) => {
         const c = catOf(p);
         return `<li class="jp" style="--c:${esc(c.colour)}" data-when="${esc(whenText(p))}">
-          <a class="jp__media" href="${esc(p.href)}" data-cursor="View case study" tabindex="-1" aria-hidden="true">${imgTag(p)}</a>
-          <div class="jp__body">
-            <p class="jp__meta"><span class="jp__cat"><i></i>${esc(c.label)}</span><span class="jp__idx">${pad2(i + 1)} / ${pad2(n)}</span></p>
-            <p class="jp__when">${esc(whenText(p))}</p>
-            <h2 class="jp__title">${esc(p.title)}</h2>
-            <p class="jp__summary">${esc(p.summary)}</p>
-            <dl class="jp__facts"><div><dt>Client</dt><dd>${esc(p.client)}</dd></div><div><dt>Role</dt><dd>${esc(p.role)}</dd></div><div><dt>Timeframe</dt><dd>${esc(p.duration)}</dd></div></dl>
-            <a class="btn btn--accent" href="${esc(p.href)}">${label("Read case study")}${ARROW_E}</a>
-          </div>
+          <article class="jp__card">
+            <div class="jp__body">
+              <p class="jp__meta"><span class="jp__cat"><i></i>${esc(c.label)}</span><span class="jp__when">${esc(whenText(p))}</span><span class="jp__idx">${pad2(i + 1)} / ${pad2(n)}</span></p>
+              <h2 class="jp__title">${esc(p.title)}</h2>
+              <p class="jp__summary">${esc(p.summary)}</p>
+              ${p.tags ? `<ul class="pcard__tags">${p.tags.map((t) => `<li>${esc(t)}</li>`).join("")}</ul>` : ""}
+              <dl class="jp__facts"><div><dt>Client</dt><dd>${esc(p.client)}</dd></div><div><dt>Role</dt><dd>${esc(p.role)}</dd></div><div><dt>Timeframe</dt><dd>${esc(p.duration)}</dd></div></dl>
+              <a class="jp__cta" href="${esc(p.href)}">View case study <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 17 17 7M9 7h8v8"/></svg></a>
+            </div>
+            <a class="jp__media" href="${esc(p.href)}" tabindex="-1" aria-hidden="true">${imgTag(p)}</a>
+          </article>
         </li>`;
       }).join("");
       panels = $$(".jp", panelsHost);
-      renderRuler();
       applyStatic();
+      renderRuler();
     }
 
+    // The time ruler: a straight line of months; the needle is fixed and the ruler slides beneath it
+    let ruler = null;
     function renderRuler() {
-      PX = innerWidth < 1080 ? 22 : 28;
       ends = list.map((p) => monthIndex(p.end || p.start) + 1);   // time runs to the end of the last month
       starts = list.map((p) => monthIndex(p.start));
-      if (!list.length) { timeHost.innerHTML = ""; return; }
+      if (!list.length || isStatic) { timeHost.innerHTML = ""; ruler = null; return; }
+      PX = innerWidth < 1080 ? 22 : 28;
       top = Math.max(...ends) + 3;
       const bottom = Math.min(...starts) - 3;
       const x = (T) => (top - T) * PX;
@@ -504,8 +976,7 @@
         if (mid > bottom + 1 && mid < top - 1) marks += `<span class="tl__year" style="left:${x(mid)}px">${y}</span>`;
       }
       marks += list.map((p, i) => `<button type="button" class="tl__span" data-i="${i}" style="left:${x(ends[i])}px;width:${(ends[i] - starts[i]) * PX}px;--sc:${esc(catOf(p).colour)}" aria-label="Jump to ${esc(p.title)}, ${esc(whenText(p))}"></button>`).join("");
-      const rail = filter === "all" ? "var(--line-strong)" : catOf(list[0]).colour;
-      timeHost.style.setProperty("--rail", rail);
+      timeHost.style.setProperty("--rail", filter === "all" ? "var(--line-strong)" : catOf(list[0]).colour);
       timeHost.innerHTML = `
         <p class="tl__readout" aria-hidden="true"><i></i><span></span></p>
         <div class="tl__window"><div class="tl__ruler" style="width:${(top - bottom) * PX}px;--px:${PX}px">${marks}</div><span class="tl__needle" aria-hidden="true"></span></div>
@@ -513,7 +984,7 @@
       ruler = $(".tl__ruler", timeHost); win = $(".tl__window", timeHost); readout = $(".tl__readout span", timeHost);
       spans = $$(".tl__span", timeHost);
       lastLabel = "";
-      spans.forEach((s) => s.addEventListener("click", () => goTo(+s.dataset.i)));
+      spans.forEach((sp) => sp.addEventListener("click", () => goTo(+sp.dataset.i)));
     }
 
     // Scroll so project i sits centre stage
@@ -635,6 +1106,7 @@
       view = v;
       journey.hidden = v !== "journey";
       bentoWrap.hidden = v !== "grid";
+      if (v === "journey") renderRuler();   // needs the timeline visible to measure
       btns.forEach((b) => b.setAttribute("aria-pressed", String(b.dataset.view === v)));
       place();
       store.set("kk-work-view", v);
@@ -659,7 +1131,8 @@
       if ((reduce || mobile()) !== wasStatic || narrow !== wasNarrow) {
         wasStatic = reduce || mobile(); wasNarrow = narrow;
         renderJourney();
-      }
+      } else if (view === "journey") renderRuler();
+      requestScenes();
     });
     fontsReady().then(place);
   }
@@ -673,26 +1146,6 @@
     const total = r.height - innerHeight;
     return total > 0 ? clamp(-r.top / total) : 0;
   };
-
-  function sceneStack() {
-    const items = $$(".stack__item");
-    if (!items.length || reduce) return;
-    scenes.push(() => {
-      items.forEach((item, i) => {
-        const card = item.firstElementChild;
-        const r = card.getBoundingClientRect();
-        // media parallax
-        card.style.setProperty("--m", ((clamp((innerHeight - r.top) / (innerHeight + r.height)) - 0.5) * 10).toFixed(2));
-        const next = items[i + 1];
-        if (!next) return;
-        const top = parseFloat(getComputedStyle(item).top) || 0;
-        const nTop = next.getBoundingClientRect().top;
-        // 0 when the next card is a full card-height below, 1 when it has covered this one
-        const p = clamp((top + item.offsetHeight - nTop) / item.offsetHeight);
-        card.style.setProperty("--p", p.toFixed(3));
-      });
-    });
-  }
 
   function scenePhilosophy() {
     const sec = $(".philo");
@@ -708,6 +1161,8 @@
       return $$(".w", s);
     });
     if (reduce) return;
+    const num = $(".philo__num", sec);
+    let shownIdx = -1;
     scenes.push(() => {
       if (mobile()) return;
       const p = sectionProgress(sec);
@@ -722,7 +1177,12 @@
       });
       const ws = words[idx];
       const on = Math.round(local * ws.length);
-      ws.forEach((w, k) => w.classList.toggle("is-on", k < on));
+      ws.forEach((w, k) => { w.classList.toggle("is-on", k < on); w.classList.toggle("is-tip", k === on - 1 && on < ws.length); });
+      if (idx !== shownIdx) {
+        shownIdx = idx;
+        sec.style.setProperty("--now", statements[idx].style.getPropertyValue("--pc") || "var(--acc-500)");
+        if (num) num.textContent = String(idx + 1).padStart(2, "0");
+      }
     });
   }
 
@@ -731,19 +1191,22 @@
     if (!sec) return;
     const chapters = $$(".chapter", sec);
     const n = chapters.length;
-    const rail = $(".chapters__rail", sec);
-    const num = rail && $(".chapters__count b", rail);
-    const ticks = rail ? $$(".chapters__tick", rail) : [];
     sec.style.setProperty("--n", n);
-    if (rail) {
-      $(".chapters__count i", rail).textContent = "/" + n;
-      ticks.forEach((t, i) => (t.style.top = (n > 1 ? (i / (n - 1)) * 100 : 0) + "%"));
-    }
     if (reduce) return;
-    let shown = -1;
+    const elev = $$("[data-elev]", sec).map((el) => [el, el.closest(".chapter")]);
+    const paths = $$(".chapter [data-path]", sec).map((el) => [el, el.closest(".chapter")]);
     scenes.push(() => {
       const p = sectionProgress(sec);
       const pos = p * (n - 1);
+      // effects progress: starts as the section scrolls in, so chapter one plays too
+      const r = sec.getBoundingClientRect();
+      const posX = pos + clamp((innerHeight - r.top) / innerHeight) - 1;
+      chapters.forEach((c, i) => c.style.setProperty("--cp", clamp((posX - i + 0.8) / 0.8).toFixed(3)));   // plays as the card rises, done as it lands
+      paths.forEach(([el, c]) => follow(el, clamp(((parseFloat(c.style.getPropertyValue("--cp")) || 0) - 0.1) / 0.85)));
+      elev.forEach(([el, c]) => {
+        const cp = parseFloat(c.style.getPropertyValue("--cp")) || 0;
+        el.textContent = Math.round(clamp((cp - 0.08) / 0.62) * +el.dataset.elev).toLocaleString("en-GB");
+      });
       const ins = chapters.map((c, i) => (i === 0 ? 1 : ease(clamp((pos - (i - 1) - 0.1) / 0.75))));
       chapters.forEach((c, i) => {
         c.style.setProperty("--in", ins[i].toFixed(4));
@@ -751,14 +1214,6 @@
         c.style.zIndex = i + 1;
         c.setAttribute("aria-hidden", String(!(ins[i] > 0.5 && (ins[i + 1] || 0) < 0.5)));
       });
-      if (!rail) return;
-      const active = Math.min(n - 1, Math.round(pos));
-      // the fill follows the cards themselves, so it moves exactly as they do
-      const fill = n > 1 ? ins.slice(1).reduce((a, b) => a + b, 0) / (n - 1) : 1;
-      rail.style.setProperty("--p", fill.toFixed(4));
-      ticks.forEach((t, i) => { t.classList.toggle("is-done", ins[i] > 0.5); t.classList.toggle("is-active", i === active); });
-      if (active !== shown) { shown = active; num.textContent = active + 1; }
-      rail.classList.toggle("is-end", ins[n - 1] > 0.6);
     });
   }
 
@@ -812,7 +1267,7 @@
         ${r("sc-mute", 48, 146, 52, 4)}${r("sc-block", 48, 154, 204, 18, 5)}<path class="sc-stroke" d="M236 161l5 5 5-5" style="stroke-width:1.6"/>
         ${r("sc-mute", 48, 182, 30, 4)}${r("sc-block", 48, 190, 98, 18, 5)}${r("sc-block", 154, 190, 98, 18, 5)}
         ${r("sc-acc", 172, 216, 80, 18, 9)}
-        ${pin(226, 146, "#F59F00", "?", "Hesitates", 210, 132, "end", 0.28)}
+        ${pin(226, 146, "#F59F00", "?", "Hesitates", 226, 174, "middle", 0.28)}
         ${pin(92, 127, "#FF7A45", "↺", "Backtracks", 108, 131, "start", 0.55)}
         ${pin(258, 67, "#FF4D4F", "✕", "Gives up", 258, 44, "middle", 0.84)}
         <g class="sc-cursor" data-path="60,262 128,127 128,127 212,163 212,163 212,163 112,127 112,127 205,225 205,225 256,69 256,69"><path d="M0 0v17l4.5-4 3 7 2.6-1.1-3-6.6h6z"/></g>
@@ -957,6 +1412,28 @@
     setStep(0);
   }
 
+  /* ------------------------------------------------------------------
+     Contact headline: words light up as it scrolls into view
+  ------------------------------------------------------------------ */
+  function sceneContact() {
+    const title = $(".contact__title");
+    if (!title) return;
+    const text = title.textContent.trim();
+    const parts = text.split(/\s+/);
+    title.setAttribute("aria-label", text);
+    // the last two words carry the colour ("worth solving?")
+    title.innerHTML = parts.map((w, i) => `<span class="cw${i >= parts.length - 2 ? " cw--accent" : ""}" aria-hidden="true">${esc(w)}</span>`).join(" ");
+    const words = $$(".cw", title);
+    if (reduce) { words.forEach((w) => w.classList.add("is-on")); return; }
+    scenes.push(() => {
+      const r = title.getBoundingClientRect();
+      if (r.top > innerHeight || r.bottom < 0) return;
+      const p = clamp((innerHeight * 0.92 - r.top) / (innerHeight * 0.45));
+      const on = Math.round(p * words.length);
+      words.forEach((w, k) => w.classList.toggle("is-on", k < on));
+    });
+  }
+
   function sceneCover() {
     const stage = $(".case-stage");
     if (!stage || reduce) return;
@@ -975,17 +1452,125 @@
     });
   }
 
+  /* ------------------------------------------------------------------
+     Case studies: category colour, chapter pill, reveals, count-ups
+  ------------------------------------------------------------------ */
+  function initCase() {
+    if (!d.body.classList.contains("page-case")) return;
+    const CATS = window.CATEGORIES || [];
+    const find = (href) => (window.PROJECTS || []).find((p) => p.href === href);
+    const catOf = (p) => p && CATS.find((c) => c.id === p.category);
+
+    // Colour the whole page with this project's category
+    const cat = catOf(find(decodeURIComponent(location.pathname.split("/").pop() || "")));
+    if (cat) {
+      root.style.setProperty("--cc", cat.colour);
+      const client = $(".case-hero__client");
+      client && client.insertAdjacentHTML("beforebegin", `<span class="case-chip"><i></i>${esc(cat.label)}</span>`);
+    }
+    const next = $(".next");
+    const nextCat = next && catOf(find(next.getAttribute("href")));
+    if (nextCat) { next.style.setProperty("--nc", nextCat.colour); $(".next__label", next).insertAdjacentHTML("afterbegin", "<i></i>"); }
+
+    const title = $(".case-hero__title");
+    if (title) fontsReady().then(() => decrypt(title, { speed: 30, delay: 150 }));
+
+    // Floating chapter pill (phones/tablets, where the side rail is hidden)
+    const links = $$(".side__link");
+    if (links.length) {
+      const chap = d.createElement("div");
+      chap.className = "chap";
+      chap.innerHTML = `<nav class="chap__menu" id="chap-menu" aria-label="Chapters" hidden>${links.map((a, i) => `<a href="${esc(a.getAttribute("href"))}"><span>${pad2(i)}</span>${esc(a.textContent)}</a>`).join("")}</nav>
+        <button class="chap__btn" type="button" aria-expanded="false" aria-controls="chap-menu"><svg class="chap__ring" viewBox="0 0 36 36" aria-hidden="true"><circle cx="18" cy="18" r="15"/><circle cx="18" cy="18" r="15" pathLength="1"/></svg><span class="chap__n">00</span><span class="chap__t">${esc(links[0].textContent)}</span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m6 15 6-6 6 6"/></svg></button>`;
+      d.body.appendChild(chap);
+      const btn = $(".chap__btn", chap), menu = $(".chap__menu", chap);
+      const set = (open) => { menu.hidden = !open; btn.setAttribute("aria-expanded", String(open)); };
+      btn.addEventListener("click", () => set(menu.hidden));
+      $$("a", menu).forEach((a) => a.addEventListener("click", () => set(false)));
+      d.addEventListener("click", (e) => { if (!chap.contains(e.target)) set(false); });
+      d.addEventListener("keydown", (e) => { if (e.key === "Escape" && !menu.hidden) { set(false); btn.focus(); } });
+    }
+
+    // Reveal content as it arrives; children of a group stagger
+    const groups = [[".case-content .block, .rank, .note", false], [".cards > *, .steps > li, .swatches > *, .stats > *, .timeline > li", true]];
+    const els = [];
+    groups.forEach(([sel, stagger]) => $$(sel).forEach((el) => {
+      el.classList.add("rv");
+      if (stagger) el.style.setProperty("--rv-i", Array.prototype.indexOf.call(el.parentElement.children, el));
+      els.push(el);
+    }));
+    const countUp = (el) => {
+      const to = +el.dataset.count, from = +(el.dataset.countFrom || 0);
+      const fmt = (v) => Math.round(v).toLocaleString("en-GB");
+      if (reduce) { el.textContent = fmt(to); return; }
+      const t0 = performance.now(), dur = 1300;
+      const tick = (t) => {
+        const k = clamp((t - t0) / dur);
+        el.textContent = fmt(lerp(from, to, 1 - Math.pow(1 - k, 3)));
+        if (k < 1) requestAnimationFrame(tick);
+      };
+      requestAnimationFrame(tick);
+    };
+    const win = (rank) => {
+      const rows = $$(".rank__row", rank);
+      const go = () => {
+        rank.classList.add("is-won");
+        rows.forEach((r) => { $(".rank__n", r).textContent = r.classList.contains("rank__row--us") ? 1 : +r.style.getPropertyValue("--r") + 2; });
+      };
+      reduce ? go() : setTimeout(go, 600);
+    };
+    const arrive = (el) => {
+      el.classList.add("is-in");
+      $$("[data-count]", el).forEach(countUp);
+      if (el.matches("[data-rank]")) win(el);
+    };
+    if (reduce || !("IntersectionObserver" in window)) { els.forEach(arrive); return; }
+    const io = new IntersectionObserver((entries) => entries.forEach((en) => {
+      if (en.isIntersecting) { arrive(en.target); io.unobserve(en.target); }
+    }), { rootMargin: "0px 0px -12% 0px" });
+    els.forEach((el) => io.observe(el));
+  }
+
   function sceneSideNav() {
     const links = $$(".side__link");
     if (!links.length) return;
     const secs = links.map((a) => $(a.getAttribute("href"))).filter(Boolean);
+    const chapters = $$(".case-section");
+    const list = $(".side__list");
+    const chap = $(".chap"), chapN = chap && $(".chap__n", chap), chapT = chap && $(".chap__t", chap);
+    const nextCard = $(".next");
+    let shown = -1;
     scenes.push(() => {
+      const line = innerHeight * 0.4;
       let idx = 0;
-      secs.forEach((s, i) => { if (s.getBoundingClientRect().top < innerHeight * 0.4) idx = i; });
+      secs.forEach((s, i) => { if (s.getBoundingClientRect().top < line) idx = i; });
+      // each chapter's underline fills as you read it
+      chapters.forEach((c) => {
+        const r = c.getBoundingClientRect();
+        c.style.setProperty("--sp", clamp((line - r.top) / Math.max(1, r.height - 80)).toFixed(3));
+        c.classList.toggle("is-current", r.top < line && r.bottom > line);
+      });
+      const first = secs[0].getBoundingClientRect(), last = chapters.length ? chapters[chapters.length - 1].getBoundingClientRect() : first;
+      const rp = clamp((line - first.top) / Math.max(1, last.bottom - first.top)).toFixed(3);
+      list && list.style.setProperty("--rp", rp);
+      if (chap) {
+        chap.style.setProperty("--rp", rp);
+        const past = chapters.length && chapters[0].getBoundingClientRect().top < innerHeight * 0.7;
+        const before = !nextCard || nextCard.getBoundingClientRect().top > innerHeight * 0.6;
+        chap.classList.toggle("is-on", !!(past && before));
+      }
+      if (idx === shown) return;
+      shown = idx;
       links.forEach((a, i) => {
         a.classList.toggle("is-active", i === idx);
+        a.classList.toggle("is-done", i < idx);
         if (i === idx) a.setAttribute("aria-current", "location"); else a.removeAttribute("aria-current");
       });
+      if (chap) {
+        chapN.textContent = pad2(idx);
+        chapT.textContent = links[idx].textContent;
+        $$(".chap__menu a", chap).forEach((a, i) => (i === idx ? a.setAttribute("aria-current", "location") : a.removeAttribute("aria-current")));
+      }
     });
   }
 
@@ -1234,7 +1819,6 @@
   /* ------------------------------------------------------------------
      Boot
   ------------------------------------------------------------------ */
-  renderStack();
   initTheme();
   initMenu();
   initCursor();
@@ -1243,18 +1827,25 @@
   initMemojiCard();
   initHero();
   initAboutHero();
+  initAboutCanvas();
+  initChapterFx();
+  initSnap();
+  initRing();
+  initWinter();
   initWork();
+  initWorks();
+  initCase();
   initGalleries();
   initLightbox();
   initSwatches();
   initReveals();
   initClock();
 
-  sceneStack();
   scenePhilosophy();
   sceneChapters();
   sceneLoop();
   sceneCover();
+  sceneContact();
   sceneProgress();
   sceneSideNav();
 
