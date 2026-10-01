@@ -11,13 +11,16 @@ Keep `Projects.html` capitalised — GitHub Pages is case-sensitive and old link
 - `sfd-project.html`, `ux-diploma.html` case studies
 - `assets/css/main.css` all styles. Colours/type are tokens at the top.
 - `assets/js/main.js` all interactions and scroll animations
-- `assets/js/projects.js` **the project list** — edit this to add work
+- `assets/js/projects.js` **the project list and project types** — edit this to add work.
+  `CATEGORIES` sets each type's label and colour (the Work page filter, key and timeline colour).
 - `Images/Memoji/` memoji PNGs, trimmed and with the see-through holes repaired
 
 ## Add a project
 1. Copy `sfd-project.html` → `my-project.html`, swap the copy and images.
 2. Add an entry to `assets/js/projects.js` (instructions are at the top of that file).
-It appears automatically on the home stack and the Projects page.
+   Give it a `category` and `start`/`end` dates ("YYYY-MM") so it lands on the Work timeline.
+It appears automatically on the home stack and the Work page (timeline and grid).
+A type only shows in the Work filter once it has a live project.
 
 ## Images still to add (show a placeholder until you do)
 - Images/LandingPage/Snowdon.jpg, Spider-Man.JPG, "Antalya arch.png" (About chapters)

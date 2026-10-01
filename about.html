@@ -68,8 +68,8 @@
 
   <section class="about-hero" aria-labelledby="about-title">
     <div class="about-hero__text">
-      <h1 class="about-hero__title" id="about-title">Hey, I'm Karun.</h1>
-      <p class="about-hero__sub">UX designer. Problem solver. Driven by purpose.</p>
+      <h1 class="about-hero__title" id="about-title">A bit about me.</h1>
+      <p class="about-hero__sub">UX designer. Problem solver. Driven by intuition.</p>
     </div>
     <img class="about-hero__memoji" src="Images/Memoji/wave.png" alt="Karun's memoji, waving hello" width="872" height="1000">
     <span class="about-hero__cue" aria-hidden="true">Scroll to meet me <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 5v14M6 13l6 6 6-6"/></svg></span>
@@ -133,7 +133,12 @@
         </article>
 
       </div>
-      <div class="chapters__dots" aria-hidden="true"><span class="is-active"></span><span></span><span></span></div>
+      <div class="chapters__rail" aria-hidden="true">
+        <span class="chapters__count"><b>1</b><i>/3</i></span>
+        <span class="chapters__track"><span class="chapters__fill"></span><span class="chapters__tick"></span><span class="chapters__tick"></span><span class="chapters__tick"></span></span>
+        <span class="chapters__mouse"><span></span></span>
+        <span class="chapters__hint">Scroll</span>
+      </div>
     </div>
   </section>
 
@@ -144,32 +149,32 @@
           <h2 class="loop__title" id="loop-title">How I work: a loop, not a line.</h2>
           <p class="loop__note">Every pass makes the idea a little more useful and a little more human. Then I go round again.</p>
           <div class="loop__steps">
-            <div class="loop__step" data-short="Observe" data-memoji="Images/Memoji/laptop.png">
+            <div class="loop__step" data-scene="observe" data-short="Observe" data-memoji="Images/Memoji/laptop.png">
               <p class="loop__step-n">Step 1 of 6</p>
               <h3>See what's there now</h3>
               <p>I start with the current solution and use it the way a real person would, not the way it was meant to be used.</p>
             </div>
-            <div class="loop__step" data-short="Pain points" data-memoji="Images/Memoji/thumbs-down.png">
+            <div class="loop__step" data-scene="pain" data-short="Pain points" data-memoji="Images/Memoji/thumbs-down.png">
               <p class="loop__step-n">Step 2 of 6</p>
               <h3>Find the pain points</h3>
               <p>Where do people hesitate, backtrack or give up? Those moments become the brief.</p>
             </div>
-            <div class="loop__step" data-short="Compare" data-memoji="Images/Memoji/shrug.png">
+            <div class="loop__step" data-scene="compare" data-short="Compare" data-memoji="Images/Memoji/shrug.png">
               <p class="loop__step-n">Step 3 of 6</p>
               <h3>Study the competition</h3>
               <p>I analyse how others solve the same problem, noting what's worth learning from and what to avoid.</p>
             </div>
-            <div class="loop__step" data-short="Ideate" data-memoji="Images/Memoji/idea.png">
+            <div class="loop__step" data-scene="ideate" data-short="Ideate" data-memoji="Images/Memoji/idea.png">
               <p class="loop__step-n">Step 4 of 6</p>
               <h3>Generate ideas</h3>
               <p>Sketches, flows and rough layouts. Quantity first, judgement later.</p>
             </div>
-            <div class="loop__step" data-short="Explore" data-memoji="Images/Memoji/celebrate.png">
+            <div class="loop__step" data-scene="explore" data-short="Explore" data-memoji="Images/Memoji/celebrate.png">
               <p class="loop__step-n">Step 5 of 6</p>
               <h3>Explore UI with AI</h3>
               <p>I use AI to widen the range of visual directions quickly and find a bit of flair I might not reach alone.</p>
             </div>
-            <div class="loop__step" data-short="Critique" data-memoji="Images/Memoji/thumbs-up.png">
+            <div class="loop__step" data-scene="critique" data-short="Critique" data-memoji="Images/Memoji/thumbs-up.png">
               <p class="loop__step-n">Step 6 of 6</p>
               <h3>Critique and make it human</h3>
               <p>Then I challenge what the AI suggested, cut anything generic and shape it around real users. And assess again.</p>
@@ -181,8 +186,9 @@
             <circle class="loop__track" cx="280" cy="280" r="220"/>
             <circle class="loop__progress" cx="280" cy="280" r="220"/>
             <g class="loop__nodes"></g>
+            <g class="loop__head"><circle class="loop__head-glow" r="18"/><circle class="loop__head-dot" r="7"/></g>
           </svg>
-          <div class="loop__center"><img src="Images/Memoji/laptop.png" alt="" width="700" height="655"></div>
+          <div class="loop__center"><div class="loop__scenes" aria-hidden="true"></div><img class="loop__memoji" src="Images/Memoji/laptop.png" alt="" width="700" height="655"></div>
         </div>
       </div>
     </div>
@@ -192,8 +198,8 @@
   <div class="wrap">
     <h2 class="contact__title" id="contact-title">Got a problem worth solving?</h2>
     <div class="contact__row">
-      <a class="btn btn--accent" href="https://www.linkedin.com/in/karun-kahlon-783655301/" target="_blank" rel="noopener noreferrer" data-magnetic="0.35"><span class="roll"><span class="roll__in" data-label="Message me on LinkedIn">Message me on LinkedIn</span></span><svg class="btn__icon btn__icon--ne" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 17 17 7M9 7h8v8"/></svg></a>
-      <a class="btn btn--ghost" href="Projects.html" data-magnetic="0.25"><span class="roll"><span class="roll__in" data-label="See all work">See all work</span></span><svg class="btn__icon btn__icon--e" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg></a>
+      <a class="btn btn--accent" href="https://www.linkedin.com/in/karun-kahlon-783655301/" target="_blank" rel="noopener noreferrer" data-magnetic="0.35"><span class="btn__label">Message me on LinkedIn</span><svg class="btn__icon btn__icon--ne" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 17 17 7M9 7h8v8"/></svg></a>
+      <a class="btn btn--ghost" href="Projects.html" data-magnetic="0.25"><span class="btn__label">See all work</span><svg class="btn__icon btn__icon--e" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg></a>
       <img class="contact__memoji" src="Images/Memoji/thumbs-up.png" alt="" loading="lazy" width="628" height="700">
     </div>
   </div>
