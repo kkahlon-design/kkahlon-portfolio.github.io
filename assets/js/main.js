@@ -85,7 +85,8 @@
   }
 
   /* ------------------------------------------------------------------
-     Nav: solid on scroll, hides on scroll down, returns on scroll up
+     Nav: solid on scroll. On desktop it hides on scroll down and returns
+     on scroll up; on phones it stays put so it never flickers.
   ------------------------------------------------------------------ */
   let lastY = scrollY;
   const nav = $(".nav");
@@ -94,8 +95,11 @@
     const y = scrollY;
     nav.classList.toggle("is-scrolled", y > 8);
     const menuOpen = $(".menu.is-open");
-    if (!menuOpen && !d.body.classList.contains("page-work")) nav.classList.toggle("is-hidden", y > 320 && y > lastY + 2);
-    if (y < lastY - 2) nav.classList.remove("is-hidden");
+    if (mobile() || d.body.classList.contains("page-work")) nav.classList.remove("is-hidden");
+    else {
+      if (!menuOpen) nav.classList.toggle("is-hidden", y > 320 && y > lastY + 2);
+      if (y < lastY - 2) nav.classList.remove("is-hidden");
+    }
     lastY = y;
   }
   function initMenu() {
@@ -409,426 +413,6 @@
   }
 
   /* ------------------------------------------------------------------
-     Chapter effects: contextual decoration for each interest
-  ------------------------------------------------------------------ */
-  const FX = {
-    trail() {
-      let topo = "";
-      for (let k = 0; k < 8; k++) {
-        const r = 36 + k * 34;
-        let d = "";
-        for (let a = 0; a <= 72; a++) {
-          const t = (a / 72) * Math.PI * 2;
-          const rr = r + Math.sin(t * 3 + k) * 9 + Math.cos(t * 5 - k * 0.7) * 5;
-          d += (a ? "L" : "M") + (430 + Math.cos(t) * rr * 1.3).toFixed(1) + " " + (210 + Math.sin(t) * rr).toFixed(1);
-        }
-        topo += `<path d="${d}Z"/>`;
-      }
-      const D = "M12 186C70 182 80 140 130 138S200 128 220 96S300 60 330 52S370 34 384 26";
-      return `<svg class="fx-topo" viewBox="0 0 600 600" preserveAspectRatio="xMidYMid slice">${topo}</svg>
-        <svg class="fx-route" viewBox="0 0 400 200">
-          <defs><mask id="route-mask" maskUnits="userSpaceOnUse" x="-20" y="-60" width="440" height="280"><path class="fx-route__mask fxd" style="--d:0.08;--sp:1.5" pathLength="1" d="${D}"/></mask></defs>
-          <circle class="fx-route__start" cx="12" cy="186" r="5"/>
-          <path class="fx-route__path" pathLength="1" d="${D}" mask="url(#route-mask)"/>
-          <g class="fxp" style="--d:0.72"><g class="fx-flag" transform="translate(384 26)"><path d="M0 0V-30"/><path d="M0-30h22l-6 7 6 7H0z"/></g></g>
-        </svg>
-        <p class="fx-elev"><b data-elev="1085">0</b> m<span>Snowdon summit</span></p>`;
-    },
-    games() {
-      return `<div class="fx-halftone"></div>`;
-    },
-    heritage() {
-      // Pre-partition (Sanjha) Panjab, drawn from approximate lon/lat of the old province's edge.
-      // West wing: Dera Ghazi Khan to Bahawalpur; east wing: Kangra and Shimla down to Gurgaon.
-      const P = ([lon, lat]) => [((lon - 69.3) * 40).toFixed(1), ((34.3 - lat) * 46).toFixed(1)];
-      const edge = [[72.2, 33.95], [73.0, 34.05], [73.6, 33.4], [74.5, 32.85], [75.4, 32.4], [76.2, 32.75], [77.0, 32.9], [77.8, 32.85], [78.4, 32.2],
-        [78.0, 31.3], [77.6, 30.4], [77.3, 29.5], [77.4, 28.6], [77.2, 27.9], [76.3, 28.0], [75.4, 28.6], [74.6, 29.5], [73.9, 29.95],
-        [73.3, 29.4], [72.4, 28.4], [71.0, 27.85], [70.0, 28.5], [69.55, 29.5], [70.1, 30.6], [70.7, 31.6], [71.1, 32.5], [71.8, 33.2]];
-      const outline = "M" + edge.map((p) => P(p).join(" ")).join("L") + "Z";
-      const line = (pts) => "M" + pts.map((p) => P(p).join(" ")).join("L");
-      // The five rivers, west to east, meeting the Indus system at Panjnad
-      const rivers = [
-        ["Jhelum", [[73.65, 33.15], [73.5, 32.7], [73.0, 32.2], [72.6, 31.7], [72.15, 31.15]], [73.75, 33.35]],
-        ["Chenab", [[74.7, 32.85], [74.1, 32.4], [73.4, 31.9], [72.7, 31.5], [72.15, 31.15], [71.7, 30.4], [71.3, 29.8], [71.0, 29.35]], [74.85, 33.05]],
-        ["Ravi", [[75.6, 32.4], [75.0, 32.0], [74.3, 31.55], [73.5, 31.0], [72.6, 30.7], [71.95, 30.6]], [75.75, 32.6]],
-        ["Beas", [[77.2, 32.25], [76.6, 31.95], [76.0, 31.75], [75.4, 31.45], [74.95, 31.15]], [77.35, 32.5]],
-        ["Sutlej", [[78.4, 31.75], [77.3, 31.35], [76.5, 31.0], [75.8, 30.95], [74.95, 31.15], [74.55, 30.85], [73.6, 30.2], [72.6, 29.75], [71.0, 29.35]], [78.0, 32.05]]
-      ];
-      const [px, py] = P([71.0, 29.35]);
-      return `<div class="fx-gurmukhi fxp" style="--d:0.2"><b lang="pa">ਸਤਿ ਸ੍ਰੀ ਅਕਾਲ</b><span>Sat Sri Akaal · Hello</span></div>
-        <svg class="fx-panjab" viewBox="0 0 380 310" aria-hidden="true">
-          <path class="land fxp" style="--d:0" d="${outline}"/>
-          ${rivers.map(([n, pts, lab], i) => {
-            const dd = line(pts), [lx, ly] = P(lab);
-            return `<path class="river fxd" style="--d:${0.1 + i * 0.07}" pathLength="1" d="${dd}"/><path class="flow" pathLength="1" d="${dd}" style="animation-delay:${-i * 0.6}s"/><text x="${lx}" y="${ly}">${n}</text>`;
-          }).join("")}
-          <circle class="confluence" cx="${px}" cy="${py}" r="4"/>
-          <text class="cap" x="${px}" y="${(+py + 20).toFixed(1)}"><tspan class="gm" lang="pa">ਪੰਜਾਬ</tspan> · five waters</text>
-        </svg>`;
-    }
-  };
-  function initChapterFx() {
-    $$(".chapter__fx[data-fx]").forEach((host) => { const b = FX[host.dataset.fx]; if (b) host.innerHTML = b(); });
-    if (reduce) $$("[data-elev]").forEach((el) => (el.textContent = (+el.dataset.elev).toLocaleString("en-GB")));
-    if (reduce) $$(".chapter [data-path]").forEach((el) => follow(el, 1));
-  }
-
-  /* ------------------------------------------------------------------
-     Easter egg: the gauntlet. Click to snap — half the page turns to
-     dust (real sampled pixels drifting away); "Undo the snap" or Esc
-     plays the same timeline backwards and rebuilds it.
-  ------------------------------------------------------------------ */
-  const relicTip = (t) => `<span class="relic__tip" aria-hidden="true">${t}</span>`;   // fixed strings only
-  // Fingers fold into a fist; the thumb crosses the front and does the snapping
-  const GAUNTLET = `<svg viewBox="0 0 64 72" aria-hidden="true">
-    <defs><linearGradient id="g-gold" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#FFE29A"/><stop offset=".45" stop-color="#E0A93B"/><stop offset="1" stop-color="#8A5A12"/></linearGradient></defs>
-    <g class="g-burst"><path d="M46 22l6-6M50 31h8M46 40l6 6"/></g>
-    <rect class="g-gold g-finger" x="15" y="8" width="8" height="22" rx="4"/>
-    <rect class="g-gold g-finger" x="24" y="5" width="8" height="25" rx="4"/>
-    <rect class="g-gold g-finger" x="33" y="7" width="8" height="23" rx="4"/>
-    <rect class="g-gold g-finger" x="42" y="12" width="7" height="18" rx="3.5"/>
-    <rect class="g-gold" x="12" y="26" width="40" height="28" rx="9"/>
-    <rect class="g-gold" x="15" y="52" width="32" height="16" rx="3"/>
-    <path d="M15 58h32" stroke="#6B4A12" stroke-width="1"/>
-    <circle class="g-stone" cx="19" cy="31" r="2.6" fill="#FF3B3B" style="--t:0s"/>
-    <circle class="g-stone" cx="28" cy="31" r="2.6" fill="#3B82FF" style="--t:.4s"/>
-    <circle class="g-stone" cx="37" cy="31" r="2.6" fill="#B04BFF" style="--t:.8s"/>
-    <circle class="g-stone" cx="45.5" cy="32" r="2.4" fill="#2BD46A" style="--t:1.2s"/>
-    <circle class="g-stone" cx="32" cy="43" r="4" fill="#FFD83B" style="--t:2s"/>
-    <g class="g-thumb"><rect class="g-gold" x="6.5" y="27" width="9" height="22" rx="4.5"/><circle class="g-stone" cx="11" cy="33" r="2.4" fill="#FF9A2B" style="--t:1.6s"/></g>
-  </svg>${relicTip("Snap?")}`;
-  const THRONE = (() => {
-    let blades = "";
-    [-50, -38, -26, -13, 0, 13, 26, 38, 50].forEach((a) => {
-      const t = (a * Math.PI) / 180, L = 32 - Math.abs(a) / 4;
-      blades += `<path class="th-blade" style="--fan:${(a * 0.2).toFixed(1)}deg" d="M32 40L${(32 + Math.sin(t) * L).toFixed(1)} ${(40 - Math.cos(t) * L).toFixed(1)}"/>`;
-    });
-    return `<svg viewBox="0 0 64 72" aria-hidden="true">
-      <defs><linearGradient id="th-steel" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#C9D1D9"/><stop offset="1" stop-color="#4A535C"/></linearGradient></defs>
-      ${blades}
-      <rect class="th-steel" x="10" y="34" width="8" height="18" rx="2"/><rect class="th-steel" x="46" y="34" width="8" height="18" rx="2"/>
-      <rect class="th-steel" x="16" y="38" width="32" height="12" rx="2"/>
-      <rect class="th-steel" x="12" y="50" width="40" height="8" rx="1.5"/>
-      <rect class="th-steel" x="7" y="58" width="50" height="9" rx="1.5"/>
-    </svg>${relicTip("Winter is coming?")}`;
-  })();
-
-  const RING = `<svg viewBox="0 0 40 46" aria-hidden="true">
-    <defs><linearGradient id="rg-gold" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#FFF1B0"/><stop offset=".4" stop-color="#E8B33A"/><stop offset=".75" stop-color="#9C6512"/><stop offset="1" stop-color="#F7D27A"/></linearGradient></defs>
-    <ellipse class="rg-band" cx="20" cy="26" rx="13" ry="10"/>
-    <path class="rg-shine" d="M10 21 Q14 16 22 16"/>
-  </svg>${relicTip("Put it on?")}`;
-
-  /* Lord of the Rings: put on the One Ring. The world drains to grey, Barad-dûr rises
-     and the Eye follows your cursor. Take it off (or Esc) to come back. */
-  function initRing() {
-    const btn = $("[data-ring]");
-    if (!btn) return;
-    btn.innerHTML = RING;
-    // The Ring-verse in the Black Speech (transliterated; the Tengwar script isn't available as a web font)
-    const SCRIPT = "Ash nazg durbatulûk · ash nazg gimbatul · ash nazg thrakatulûk · agh burzum-ishi krimpatul ·";
-    let ov = null, onMove = null;
-    const takeOff = () => {
-      if (!ov || ov.classList.contains("is-leaving")) return;
-      const node = ov;
-      node.classList.add("is-leaving");
-      removeEventListener("pointermove", onMove);
-      removeEventListener("pointerdown", onMove);
-      setTimeout(() => { node.remove(); if (ov === node) ov = null; btn.focus({ preventScroll: true }); }, 700);
-    };
-    btn.addEventListener("click", () => {
-      if (ov) return;
-      let windows = "";
-      [[132, 300], [168, 300], [150, 360], [122, 430], [178, 430], [150, 500], [110, 560], [190, 560], [150, 620]].forEach(([x, y], i) => {
-        windows += `<rect class="rw-window" x="${x - 2.5}" y="${y}" width="5" height="9" rx="1" style="--t:${(-i * 0.4).toFixed(1)}s"/>`;
-      });
-      ov = d.createElement("div");
-      ov.className = "ringworld";
-      ov.setAttribute("role", "dialog");
-      ov.setAttribute("aria-modal", "true");
-      ov.setAttribute("aria-label", "Wearing the One Ring");
-      ov.innerHTML = `<div class="ringworld__haze"></div>
-        <div class="ringworld__ring" aria-hidden="true"><svg viewBox="0 0 400 400">
-          <defs>
-            <linearGradient id="rw-gold" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#FFF1B0"/><stop offset=".35" stop-color="#E8B33A"/><stop offset=".7" stop-color="#9C6512"/><stop offset="1" stop-color="#F7D27A"/></linearGradient>
-            <path id="rw-path" d="M50 200A150 150 0 1 1 350 200A150 150 0 1 1 50 200"/>
-          </defs>
-          <g class="spin">
-            <circle class="rw-band" cx="200" cy="200" r="150"/>
-            <circle class="rw-edge" cx="200" cy="200" r="170"/><circle class="rw-edge" cx="200" cy="200" r="130"/>
-            <text class="rw-script" dy="5"><textPath href="#rw-path" textLength="930" lengthAdjust="spacingAndGlyphs">${SCRIPT}</textPath></text>
-          </g>
-        </svg></div>
-        <div class="ringworld__caption"><p>You put on the Ring.</p><small>The Eye is watching. <span class="only-hover">Move your cursor.</span><span class="only-touch">Tap anywhere.</span></small></div>
-        <div class="ringworld__tower" aria-hidden="true"><svg viewBox="0 0 300 800">
-          <defs>
-            <radialGradient id="rw-eyeglow"><stop offset="0" stop-color="#FFB347" stop-opacity=".9"/><stop offset=".45" stop-color="#FF4D00" stop-opacity=".55"/><stop offset="1" stop-color="#FF2A00" stop-opacity="0"/></radialGradient>
-            <radialGradient id="rw-iris"><stop offset="0" stop-color="#FFF2A8"/><stop offset=".35" stop-color="#FFB13B"/><stop offset=".75" stop-color="#FF5A0A"/><stop offset="1" stop-color="#A81E00"/></radialGradient>
-          </defs>
-          <path class="rw-tower" d="M0 800L40 640L62 500L82 470L92 380L102 360L110 262L120 240L126 150L106 40L136 112L150 128L164 112L194 40L174 150L180 240L190 262L198 360L208 380L218 470L238 500L260 640L300 800Z"/>
-          ${windows}
-          <ellipse class="rw-eye-glow" cx="150" cy="86" rx="78" ry="40"/>
-          <path class="rw-eye" d="M102 86Q150 52 198 86Q150 120 102 86Z"/>
-          <ellipse class="rw-pupil" cx="150" cy="86" rx="5" ry="25"/>
-          <path class="rw-lid rw-lid--top" d="M98 86Q150 44 202 86Z"/><path class="rw-lid rw-lid--bot" d="M98 86Q150 128 202 86Z"/>
-        </svg></div>
-        <button class="ringworld__off" type="button">Take off the Ring</button>`;
-      d.body.appendChild(ov);
-      const off = $(".ringworld__off", ov), pupil = $(".rw-pupil", ov), eye = $(".rw-eye", ov);
-      off.addEventListener("click", takeOff);
-      off.focus({ preventScroll: true });
-      ov.addEventListener("keydown", (e) => {
-        if (e.key === "Escape") takeOff();
-        if (e.key === "Tab") { e.preventDefault(); off.focus(); }
-      });
-      // The Eye follows the pointer (or your finger)
-      onMove = (e) => {
-        const r = eye.getBoundingClientRect();
-        const dx = e.clientX - (r.left + r.width / 2), dy = e.clientY - (r.top + r.height / 2);
-        const k = Math.min(1, Math.hypot(dx, dy) / 260);
-        const a = Math.atan2(dy, dx);
-        pupil.style.transform = `translate(${(Math.cos(a) * k * 30).toFixed(1)}px, ${(Math.sin(a) * k * 9).toFixed(1)}px)`;
-      };
-      if (!reduce) { addEventListener("pointermove", onMove, { passive: true }); addEventListener("pointerdown", onMove, { passive: true }); }
-    });
-  }
-
-  /* Game of Thrones: winter comes to the page for a few seconds */
-  function initWinter() {
-    const btn = $("[data-winter]");
-    if (!btn) return;
-    btn.innerHTML = THRONE;
-    let run = null;
-    const stop = () => {
-      if (!run) return;
-      const r = run; run = null;
-      cancelAnimationFrame(r.raf); clearTimeout(r.timer);
-      r.chip.classList.add("is-leaving");
-      r.cv.style.transition = "opacity 0.6s"; r.cv.style.opacity = "0";
-      setTimeout(() => { r.cv.remove(); r.chip.remove(); }, 650);
-    };
-    btn.addEventListener("click", () => {
-      if (run) return stop();
-      const cv = d.createElement("canvas"), chip = d.createElement("div");
-      cv.className = "winter"; cv.setAttribute("aria-hidden", "true");
-      chip.className = "winter__chip"; chip.setAttribute("role", "status"); chip.textContent = "Winter is coming";
-      d.body.append(cv, chip);
-      const dpr = Math.min(2, devicePixelRatio || 1);
-      const W = (cv.width = innerWidth * dpr), H = (cv.height = innerHeight * dpr);
-      cv.style.width = "100vw"; cv.style.height = "100vh";
-      const g = cv.getContext("2d");
-      const flakes = reduce ? [] : Array.from({ length: 170 }, () => ({ x: Math.random() * W, y: Math.random() * -H, r: (0.8 + Math.random() * 2.4) * dpr, v: (0.6 + Math.random() * 1.4) * dpr, s: Math.random() * 6.28 }));
-      run = { cv, chip, raf: 0, timer: setTimeout(stop, 7000) };
-      const tick = () => {
-        g.clearRect(0, 0, W, H);
-        g.fillStyle = "rgba(240, 248, 255, 0.85)";
-        flakes.forEach((f) => {
-          f.y += f.v; f.s += 0.02; f.x += Math.sin(f.s) * 0.6 * dpr;
-          if (f.y > H) { f.y = -10; f.x = Math.random() * W; }
-          g.beginPath(); g.arc(f.x, f.y, f.r, 0, 6.283); g.fill();
-        });
-        if (run) run.raf = requestAnimationFrame(tick);
-      };
-      tick();
-    });
-  }
-
-  function parseColour(str) {
-    let m = /rgba?\(\s*([\d.]+)[,\s]+([\d.]+)[,\s]+([\d.]+)(?:\s*[,/]\s*([\d.]+%?))?/.exec(str);
-    if (m) return [+m[1], +m[2], +m[3], m[4] == null ? 1 : m[4].endsWith("%") ? parseFloat(m[4]) / 100 : +m[4]];
-    m = /color\(srgb\s+([\d.]+)\s+([\d.]+)\s+([\d.]+)(?:\s*\/\s*([\d.]+))?/.exec(str);
-    if (m) return [m[1] * 255, m[2] * 255, m[3] * 255, m[4] == null ? 1 : +m[4]];
-    return null;
-  }
-
-  function initSnap() {
-    const trigger = $("[data-snap]");
-    if (!trigger) return;
-    trigger.innerHTML = GAUNTLET;
-    const SEL = [".nav__brand", ".nav__link", ".theme-toggle", ".about-hero__title", ".about-hero__sub", ".about-hero__memoji", ".hpin",
-      ".intro__label", ".intro__text", ".chapter__num", ".chapter__title", ".chapter__text", ".chapter__memoji", ".chapter__media",
-      ".fx-panjab", ".fx-gurmukhi", ".fx-elev", ".fx-route",
-      ".philo__title", ".philo__label", ".philo__statement.is-active", ".contact__title", ".contact__row .btn", ".contact__memoji",
-      ".footer p", ".footer__links a"].join(",");
-    const SWEEP = 0.8, SCATTER = 0.35, LIFE = 1.3;   // seconds
-    let state = "idle", victims = [], undo = null, canvas = null;
-
-    const hiddenChapter = (el) => { const c = el.closest(".chapter"); return c && c.getAttribute("aria-hidden") === "true"; };
-    const onScreen = (el) => {
-      const r = el.getBoundingClientRect();
-      return r.width > 2 && r.height > 2 && r.bottom > 0 && r.top < innerHeight && r.right > 0 && r.left < innerWidth && !hiddenChapter(el);
-    };
-
-    // Turn an element into a list of coloured cells (its "pixels")
-    function pixelsOf(el, budget) {
-      const r = el.getBoundingClientRect();
-      const s = Math.max(3, Math.ceil(Math.sqrt((r.width * r.height) / budget)));
-      const out = [];
-      const add = (x, y, c) => { if (c && c[3] > 0.05) out.push({ x, y, c, f: (x - r.left) / Math.max(1, r.width) }); };
-      const img = el.tagName === "IMG" ? el : $("img", el);
-      let drew = false;
-      if (img && img.complete && img.naturalWidth && !img.closest(".has-missing")) {
-        try {
-          const ir = img.getBoundingClientRect();
-          const cw = Math.max(1, Math.ceil(r.width / s)), ch = Math.max(1, Math.ceil(r.height / s));
-          const cv = d.createElement("canvas"); cv.width = cw; cv.height = ch;
-          const g = cv.getContext("2d");
-          const cover = getComputedStyle(img).objectFit === "cover";
-          let sx = 0, sy = 0, sw = img.naturalWidth, sh = img.naturalHeight;
-          if (cover) {
-            const k = Math.max(ir.width / sw, ir.height / sh);
-            const vw = ir.width / k, vh = ir.height / k;
-            sx = (sw - vw) / 2; sy = getComputedStyle(img).objectPosition.startsWith("50% 0") ? 0 : (sh - vh) / 2; sw = vw; sh = vh;
-          }
-          g.drawImage(img, sx, sy, sw, sh, (ir.left - r.left) / s, (ir.top - r.top) / s, ir.width / s, ir.height / s);
-          const data = g.getImageData(0, 0, cw, ch).data;
-          for (let j = 0; j < ch; j++) for (let i = 0; i < cw; i++) {
-            const o = (j * cw + i) * 4;
-            if (data[o + 3] > 60) add(r.left + i * s, r.top + j * s, [data[o], data[o + 1], data[o + 2], data[o + 3] / 255]);
-          }
-          drew = out.length > 0;
-        } catch (e) { drew = false; }
-      }
-      if (!drew) {
-        const cs = getComputedStyle(el);
-        const bg = parseColour(cs.backgroundColor), fg = parseColour(cs.color) || [255, 255, 255, 1];
-        if (bg && bg[3] > 0.1) {
-          for (let y = r.top; y < r.bottom; y += s) for (let x = r.left; x < r.right; x += s) add(x, y, bg);
-        }
-        const range = d.createRange();
-        range.selectNodeContents(el);
-        const lines = Array.from(range.getClientRects());
-        const ink = bg && bg[3] > 0.1 ? 0.25 : 0.5;
-        lines.forEach((lr) => {
-          for (let y = lr.top + lr.height * 0.18; y < lr.bottom - lr.height * 0.12; y += s)
-            for (let x = lr.left; x < lr.right; x += s) if (Math.random() < ink) add(x, y, fg);
-        });
-        if (!out.length) {   // SVG art and the like: sample its stroke/fill colour sparsely
-          const svgCol = el.querySelector("path, circle, ellipse") ? parseColour(getComputedStyle(el.querySelector("path, circle, ellipse")).stroke) || parseColour(getComputedStyle(el.querySelector("path, circle, ellipse")).fill) : null;
-          for (let y = r.top; y < r.bottom; y += s) for (let x = r.left; x < r.right; x += s) if (Math.random() < 0.3) add(x, y, svgCol || fg);
-        }
-      }
-      // where each pixel blows to, and when it lets go
-      out.forEach((p) => {
-        p.s = s;
-        p.del = p.f * SWEEP + Math.random() * SCATTER;
-        p.dx = 60 + Math.random() * 240;
-        p.dy = -(40 + Math.random() * 200);
-        p.w = Math.random() * 6.28;
-        p.life = LIFE * (0.7 + Math.random() * 0.6);
-      });
-      return out;
-    }
-
-    function ensureCanvas() {
-      if (!canvas) {
-        canvas = d.createElement("canvas");
-        canvas.className = "dust";
-        canvas.setAttribute("aria-hidden", "true");
-        d.body.appendChild(canvas);
-      }
-      canvas.width = innerWidth; canvas.height = innerHeight;
-      return canvas;
-    }
-
-    // One timeline, played forwards (snap) or backwards (restore)
-    function play(list, backwards) {
-      return new Promise((done) => {
-        const cv = ensureCanvas(), ctx = cv.getContext("2d");
-        const W = cv.width, H = cv.height;
-        const frame = ctx.createImageData(W, H), buf = new Uint32Array(frame.data.buffer);
-        const parts = list.flatMap((v) => v.parts);
-        const total = Math.max(SWEEP + SCATTER + LIFE * 1.3, ...parts.map((p) => p.del + p.life));
-        const t0 = performance.now();
-        const tick = (now) => {
-          const el = (now - t0) / 1000;
-          const t = backwards ? total - el : el;
-          buf.fill(0);
-          for (let i = 0; i < parts.length; i++) {
-            const p = parts[i];
-            if (t < p.f * SWEEP) continue;              // still part of the element
-            const k = clamp((t - p.del) / p.life);
-            if (k >= 1) continue;
-            const e = k * k;
-            const x = (p.x + p.dx * e + Math.sin(p.w + k * 7) * 10 * k) | 0;
-            const y = (p.y + p.dy * e) | 0;
-            const a = ((1 - k) * p.c[3] * 255) | 0;
-            const col = (a << 24) | ((p.c[2] & 255) << 16) | ((p.c[1] & 255) << 8) | (p.c[0] & 255);
-            const sz = Math.max(1, (p.s * (1 - k * 0.5)) | 0);
-            for (let yy = y; yy < y + sz; yy++) {
-              if (yy < 0 || yy >= H) continue;
-              const row = yy * W;
-              for (let xx = x; xx < x + sz; xx++) if (xx >= 0 && xx < W) buf[row + xx] = col;
-            }
-          }
-          ctx.putImageData(frame, 0, 0);
-          // each element is wiped away left to right, in step with its pixels letting go
-          const w = clamp(t / SWEEP) * 100;
-          list.forEach((v) => (v.el.style.clipPath = `inset(-2px -2px -2px calc(${w.toFixed(2)}% - 2px))`));
-          if (backwards ? t > 0 : t < total) requestAnimationFrame(tick);
-          else { ctx.clearRect(0, 0, W, H); done(); }
-        };
-        requestAnimationFrame(tick);
-      });
-    }
-
-    function showUndo() {
-      undo = d.createElement("div");
-      undo.className = "unsnap";
-      undo.setAttribute("role", "status");
-      undo.innerHTML = `<p>Half the page, gone.</p><button type="button" class="btn btn--accent">${label("Undo the snap")}</button>`;
-      d.body.appendChild(undo);
-      const b = $("button", undo);
-      b.addEventListener("click", restore);
-      b.focus({ preventScroll: true });
-    }
-
-    async function snap() {
-      if (state !== "idle") return;
-      state = "snapping";
-      trigger.classList.add("is-snapping");
-      await new Promise((r) => setTimeout(r, reduce ? 0 : 520));
-      const all = $$(SEL).filter((el) => !el.contains(trigger) && !el.closest(".is-dusted") && el.getClientRects().length);
-      for (let i = all.length - 1; i > 0; i--) { const j = (Math.random() * (i + 1)) | 0; [all[i], all[j]] = [all[j], all[i]]; }
-      const vis = all.filter(onScreen), rest = all.filter((el) => !vis.includes(el));
-      const near = vis.slice(0, Math.ceil(vis.length / 2)), far = rest.slice(0, Math.ceil(rest.length / 2));
-      victims = [...near, ...far];
-      far.forEach((el) => el.classList.add("is-dusted"));
-      if (!reduce && near.length) {
-        const budget = Math.min(4000, 30000 / near.length);
-        const list = near.map((el) => ({ el, parts: pixelsOf(el, budget) }));
-        await play(list, false);
-      }
-      near.forEach((el) => { el.classList.add("is-dusted"); el.style.clipPath = ""; });
-      trigger.classList.remove("is-snapping");
-      state = "dusted";
-      showUndo();
-    }
-
-    async function restore() {
-      if (state !== "dusted") return;
-      state = "restoring";
-      if (undo) { undo.remove(); undo = null; }
-      const near = victims.filter(onScreen), far = victims.filter((el) => !near.includes(el));
-      far.forEach((el) => el.classList.remove("is-dusted"));
-      if (!reduce && near.length) {
-        const budget = Math.min(4000, 30000 / near.length);
-        const list = near.map((el) => ({ el, parts: pixelsOf(el, budget) }));
-        list.forEach((v) => { v.el.style.clipPath = "inset(0 0 0 100%)"; v.el.classList.remove("is-dusted"); });
-        await play(list, true);
-      }
-      near.forEach((el) => { el.classList.remove("is-dusted"); el.style.clipPath = ""; });
-      victims = [];
-      state = "idle";
-      trigger.focus({ preventScroll: true });
-    }
-
-    trigger.addEventListener("click", snap);
-    d.addEventListener("keydown", (e) => { if (e.key === "Escape" && state === "dusted") restore(); });
-    addEventListener("resize", () => { if (canvas && state === "idle") { canvas.width = canvas.height = 0; } });
-  }
-
-  /* ------------------------------------------------------------------
      Project rendering from window.PROJECTS
   ------------------------------------------------------------------ */
   const esc = (s) => String(s ?? "").replace(/[&<>"']/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]));
@@ -840,15 +424,8 @@
      Shared project helpers + home "Selected work" cards
      (plain cards in normal scroll: quick to load, easy to scan)
   ------------------------------------------------------------------ */
-  const MONTHS = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
   const monthIndex = (s) => { const [y, m] = String(s).split("-").map(Number); return y * 12 + (m || 1) - 1; };
-  const fmtMonth = (i) => MONTHS[((i % 12) + 12) % 12] + " " + Math.floor(i / 12);
-  const whenText = (p) => {
-    const a = monthIndex(p.start), b = monthIndex(p.end || p.start);
-    return a === b ? fmtMonth(a) : `${fmtMonth(a)} – ${fmtMonth(b)}`;
-  };
   const pad2 = (n) => String(n).padStart(2, "0");
-  const ARROW_E = '<svg class="btn__icon btn__icon--e" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg>';
 
   function initWorks() {
     const host = $("#pcards");
@@ -856,30 +433,24 @@
     const CATS = window.CATEGORIES || [];
     const catOf = (p) => CATS.find((c) => c.id === p.category);
     const NE = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 17 17 7M9 7h8v8"/></svg>';
-    const SPIN = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M12 3v3M12 18v3M3 12h3M18 12h3M5.6 5.6l2.1 2.1M16.3 16.3l2.1 2.1M5.6 18.4l2.1-2.1M16.3 7.7l2.1-2.1"/></svg>';
     const featured = window.PROJECTS.filter((p) => p.featured);
-    host.innerHTML = featured.map((p, i) => {
-      const flip = i % 2 ? " pcard--flip" : "";
+    host.innerHTML = featured.map((p) => {
       if (p.status === "soon") {
-        return `<article class="pcard pcard--soon${flip}" style="--c:#8C95FF"><div class="pcard__link">
+        return `<article class="pcard pcard--soon"><div class="pcard__link">
           <div class="pcard__body">
-            <p class="pcard__meta"><span class="pcard__cat"><i></i>${esc(p.client)}</span><span>${esc(p.year)}</span></p>
+            <p class="pcard__meta"><span>${esc(p.client)}</span><span>${esc(p.year)}</span></p>
             <h3 class="pcard__title">${esc(p.title)}</h3>
             <p class="pcard__lede">${esc(p.summary)}</p>
-            <span class="pcard__soon">${SPIN}Coming soon</span>
           </div>
-          <div class="pcard__media"><img src="${esc(p.memoji)}" alt="" loading="lazy"></div>
         </div></article>`;
       }
       const c = catOf(p) || { label: "Project", colour: "#3D4BFF" };
-      const when = p.start ? whenText(p) : p.year;
-      return `<article class="pcard${flip}" style="--c:${esc(c.colour)}"><a class="pcard__link" href="${esc(p.href)}">
+      return `<article class="pcard" style="--c:${esc(c.colour)}"><a class="pcard__link" href="${esc(p.href)}">
         <div class="pcard__body">
           <p class="pcard__meta"><span class="pcard__cat"><i></i>${esc(c.label)}</span><span>${esc(p.year)}</span></p>
           <h3 class="pcard__title">${esc(p.title)}</h3>
           <p class="pcard__lede">${esc(p.summary)}</p>
-          ${p.tags ? `<ul class="pcard__tags">${p.tags.map((t) => `<li>${esc(t)}</li>`).join("")}</ul>` : ""}
-          <dl class="pcard__facts"><div><dt>Role</dt><dd>${esc(p.role)}</dd></div><div><dt>Timeline</dt><dd>${esc(p.duration)} · ${esc(when)}</dd></div></dl>
+          <p class="pcard__facts">${esc(p.role)} · ${esc(p.duration)}</p>
           <span class="pcard__cta">View case study ${NE}</span>
         </div>
         <div class="pcard__media">${imgTag(p)}</div>
@@ -893,17 +464,16 @@
   }
 
   /* ------------------------------------------------------------------
-     Work page: type filter (colour key) + timeline journey + bento grid
+     Work page: type filter (colour key) + bento grid
   ------------------------------------------------------------------ */
   function initWork() {
-    const journey = $("#journey");
-    if (!journey || !window.PROJECTS) return;
+    const bento = $("#bento");
+    if (!bento || !window.PROJECTS) return;
     const CATS = window.CATEGORIES || [];
     const catOf = (p) => CATS.find((c) => c.id === p.category) || { label: "Project", colour: "#8C8C8C" };
-    const fHost = $("#filters"), panelsHost = $("#journey-panels"), timeHost = $("#journey-time");
-    const bento = $("#bento"), bentoWrap = $("#bento-wrap"), head = $(".work-head"), seg = $("[data-view-toggle]");
+    const fHost = $("#filters"), head = $(".work-head");
 
-    // Newest first: the further you scroll, the further back in time you go
+    // Newest first
     const live = window.PROJECTS
       .filter((p) => p.status === "live" && p.start)
       .sort((a, b) => monthIndex(b.end || b.start) - monthIndex(a.end || a.start));
@@ -913,11 +483,8 @@
 
     let filter = new URLSearchParams(location.search).get("type");
     if (!cats.some((c) => c.id === filter)) filter = "all";
-    let view = store.get("kk-work-view") === "grid" ? "grid" : "journey";
-    let list = [], panels = [], spans = [], win = null, readout = null;
-    let top = 0, PX = 28, ends = [], starts = [], lastLabel = "", isStatic = false;
 
-    /* Filter chips — the key for the timeline colours */
+    /* Filter chips — the key for the category colours */
     fHost.style.setProperty("--chip-mix", cats.map((c, i) => `${c.colour} ${(i / cats.length) * 100}% ${((i + 1) / cats.length) * 100}%`).join(", "));
     fHost.innerHTML =
       `<button type="button" class="chip chip--all" data-cat="all"><i></i>All <span class="chip__n">${live.length}</span></button>` +
@@ -926,134 +493,12 @@
 
     const pick = () => (filter === "all" ? live : live.filter((p) => p.category === filter));
 
-    /* Reveal-on-scroll for the static (phone / reduced motion) timeline */
-    const io = "IntersectionObserver" in window && !reduce
-      ? new IntersectionObserver((es) => es.forEach((e) => { if (e.isIntersecting) { e.target.classList.add("is-in"); io.unobserve(e.target); } }), { rootMargin: "0px 0px -10% 0px" })
-      : null;
-
-    function renderJourney() {
-      list = pick();
-      const n = list.length;
-      journey.style.setProperty("--n", n);
-      const cols = list.map((p) => catOf(p).colour);
-      journey.style.setProperty("--rail-grad", cols.length > 1 ? `linear-gradient(${cols.join(", ")})` : cols[0] || "var(--line-strong)");
-      panelsHost.innerHTML = list.map((p, i) => {
-        const c = catOf(p);
-        return `<li class="jp" style="--c:${esc(c.colour)}" data-when="${esc(whenText(p))}">
-          <article class="jp__card">
-            <div class="jp__body">
-              <p class="jp__meta"><span class="jp__cat"><i></i>${esc(c.label)}</span><span class="jp__when">${esc(whenText(p))}</span><span class="jp__idx">${pad2(i + 1)} / ${pad2(n)}</span></p>
-              <h2 class="jp__title">${esc(p.title)}</h2>
-              <p class="jp__summary">${esc(p.summary)}</p>
-              ${p.tags ? `<ul class="pcard__tags">${p.tags.map((t) => `<li>${esc(t)}</li>`).join("")}</ul>` : ""}
-              <dl class="jp__facts"><div><dt>Client</dt><dd>${esc(p.client)}</dd></div><div><dt>Role</dt><dd>${esc(p.role)}</dd></div><div><dt>Timeframe</dt><dd>${esc(p.duration)}</dd></div></dl>
-              <a class="jp__cta" href="${esc(p.href)}">View case study <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 17 17 7M9 7h8v8"/></svg></a>
-            </div>
-            <a class="jp__media" href="${esc(p.href)}" tabindex="-1" aria-hidden="true">${imgTag(p)}</a>
-          </article>
-        </li>`;
-      }).join("");
-      panels = $$(".jp", panelsHost);
-      applyStatic();
-      renderRuler();
-    }
-
-    // The time ruler: a straight line of months; the needle is fixed and the ruler slides beneath it
-    let ruler = null;
-    function renderRuler() {
-      ends = list.map((p) => monthIndex(p.end || p.start) + 1);   // time runs to the end of the last month
-      starts = list.map((p) => monthIndex(p.start));
-      if (!list.length || isStatic) { timeHost.innerHTML = ""; ruler = null; return; }
-      PX = innerWidth < 1080 ? 22 : 28;
-      top = Math.max(...ends) + 3;
-      const bottom = Math.min(...starts) - 3;
-      const x = (T) => (top - T) * PX;
-      let marks = "";
-      for (let y = Math.floor(bottom / 12); y <= Math.floor(top / 12); y++) {
-        const jan = y * 12;
-        if (jan > bottom && jan < top) marks += `<span class="tl__yeartick" style="left:${x(jan)}px"></span>`;
-        const mid = jan + 6;
-        if (mid > bottom + 1 && mid < top - 1) marks += `<span class="tl__year" style="left:${x(mid)}px">${y}</span>`;
-      }
-      marks += list.map((p, i) => `<button type="button" class="tl__span" data-i="${i}" style="left:${x(ends[i])}px;width:${(ends[i] - starts[i]) * PX}px;--sc:${esc(catOf(p).colour)}" aria-label="Jump to ${esc(p.title)}, ${esc(whenText(p))}"></button>`).join("");
-      timeHost.style.setProperty("--rail", filter === "all" ? "var(--line-strong)" : catOf(list[0]).colour);
-      timeHost.innerHTML = `
-        <p class="tl__readout" aria-hidden="true"><i></i><span></span></p>
-        <div class="tl__window"><div class="tl__ruler" style="width:${(top - bottom) * PX}px;--px:${PX}px">${marks}</div><span class="tl__needle" aria-hidden="true"></span></div>
-        <div class="tl__ends"><span>Latest <b>${fmtMonth(Math.max(...ends) - 1)}</b></span><span><b>${fmtMonth(Math.min(...starts))}</b> Earliest</span></div>`;
-      ruler = $(".tl__ruler", timeHost); win = $(".tl__window", timeHost); readout = $(".tl__readout span", timeHost);
-      spans = $$(".tl__span", timeHost);
-      lastLabel = "";
-      spans.forEach((sp) => sp.addEventListener("click", () => goTo(+sp.dataset.i)));
-    }
-
-    // Scroll so project i sits centre stage
-    function goTo(i) {
-      const n = list.length;
-      const total = journey.offsetHeight - innerHeight;
-      const p = n > 1 ? (i + 0.25) / (n - 0.5) : 0.5;
-      const y = journey.getBoundingClientRect().top + scrollY + p * total;
-      scrollTo({ top: y, behavior: reduce ? "auto" : "smooth" });
-    }
-
-    function applyStatic() {
-      isStatic = reduce || mobile();
-      journey.classList.toggle("is-static", isStatic);
-      if (!isStatic) return;
-      panels.forEach((el) => {
-        el.inert = false;
-        el.removeAttribute("aria-hidden");
-        el.classList.remove("is-far");
-        if (io) io.observe(el); else el.classList.add("is-in");
-      });
-    }
-
-    // Scroll position → time. Each project gets a "visit" (time sweeps its own span),
-    // then an eased hop back to the next one.
-    function timeAt(pos) {
-      for (let i = 0; i < list.length; i++) {
-        if (pos < i - 0.25) return lerp(starts[i - 1], ends[i], ease(clamp((pos - (i - 1 + 0.25)) / 0.5)));
-        if (pos <= i + 0.25) return lerp(ends[i], starts[i], clamp((pos - (i - 0.25)) / 0.5));
-      }
-      return starts[starts.length - 1];
-    }
-
-    function frame() {
-      if (view !== "journey" || isStatic || !list.length) return;
-      const n = list.length;
-      const r = journey.getBoundingClientRect();
-      const total = r.height - innerHeight;
-      const p = total > 0 ? clamp(-r.top / total) : 0;
-      const pos = -0.25 + p * (n - 0.5);
-      let cur = 0;
-      for (let j = 0; j < n - 1; j++) cur += ease(clamp((pos - j - 0.25) / 0.5));
-      panels.forEach((el, i) => {
-        const o = i - cur;
-        el.style.setProperty("--inc", clamp(o).toFixed(4));
-        el.style.setProperty("--out", clamp(-o).toFixed(4));
-        el.classList.toggle("is-far", Math.abs(o) >= 0.999);
-        const on = Math.abs(o) < 0.5;
-        if (el.inert === on) { el.inert = !on; el.setAttribute("aria-hidden", String(!on)); }
-      });
-      const near = Math.min(n - 1, Math.round(cur));
-      const T = timeAt(pos);
-      if (ruler) {
-        ruler.style.transform = `translateX(${(win.clientWidth / 2 - (top - T) * PX).toFixed(1)}px)`;
-        const lbl = fmtMonth(Math.floor(T - 0.001));
-        if (lbl !== lastLabel) { readout.textContent = lbl; lastLabel = lbl; }
-        timeHost.style.setProperty("--c", catOf(list[near]).colour);
-        spans.forEach((s, i) => s.classList.toggle("is-current", i === near));
-      }
-    }
-    scenes.push(frame);
-
     /* Bento: every card takes the proportions of its preview, rows justify to fill the width */
     function renderBento() {
       const items = filter === "all" ? [...live, ...window.PROJECTS.filter((p) => p.status === "soon")] : pick();
       bento.innerHTML = items.map((p, k) => {
         if (p.status === "soon") {
-          return `<li class="bento__item" style="--r:1.25;--i:${k}"><div class="bcard bcard--soon">
-            <img src="${esc(p.memoji)}" alt="" loading="lazy">
+          return `<li class="bento__item bento__item--soon" style="--r:1.6;--i:${k}"><div class="bcard bcard--soon">
             <span class="bcard__info"><span class="bcard__cat">${esc(p.client)}</span><span class="bcard__title">${esc(p.title)}</span><span class="bcard__sum">${esc(p.summary)}</span></span>
           </div></li>`;
         }
@@ -1076,10 +521,8 @@
 
     /* Keep the reader at the start of the new set if they were deep in the old one */
     const backToStart = () => {
-      // the bar is sticky, so measure from what it sits above: the pinned timeline, or the header for the grid
-      const y = view === "journey" && !isStatic
-        ? journey.getBoundingClientRect().top + scrollY
-        : head.getBoundingClientRect().bottom + scrollY - (parseFloat(getComputedStyle(root).getPropertyValue("--nav-h")) || 72);
+      // the bar is sticky, so measure from the header it sits under
+      const y = head.getBoundingClientRect().bottom + scrollY - (parseFloat(getComputedStyle(root).getPropertyValue("--nav-h")) || 72);
       if (scrollY > y + 4) scrollTo({ top: y, behavior: "auto" });
     };
 
@@ -1089,52 +532,13 @@
       const url = new URL(location.href);
       if (id === "all") url.searchParams.delete("type"); else url.searchParams.set("type", id);
       history.replaceState(null, "", url);
-      const swap = () => { renderJourney(); renderBento(); backToStart(); requestScenes(); };
+      const swap = () => { renderBento(); backToStart(); };
       if (d.startViewTransition && !reduce) d.startViewTransition(swap); else swap();
     }
     chips.forEach((c) => c.addEventListener("click", () => { if (c.dataset.cat !== filter) setFilter(c.dataset.cat); }));
     chips.forEach((c) => c.setAttribute("aria-pressed", String(c.dataset.cat === filter)));
 
-    /* Timeline / grid toggle */
-    const btns = $$("button", seg), thumb = $(".seg__thumb", seg);
-    const place = () => {
-      const on = btns.find((b) => b.getAttribute("aria-pressed") === "true");
-      thumb.style.width = on.offsetWidth + "px";
-      thumb.style.transform = `translateX(${on.offsetLeft}px)`;
-    };
-    const setView = (v, animate) => {
-      view = v;
-      journey.hidden = v !== "journey";
-      bentoWrap.hidden = v !== "grid";
-      if (v === "journey") renderRuler();   // needs the timeline visible to measure
-      btns.forEach((b) => b.setAttribute("aria-pressed", String(b.dataset.view === v)));
-      place();
-      store.set("kk-work-view", v);
-      if (animate) {
-        backToStart();
-        if (v === "grid" && !reduce) {
-          bento.classList.add("is-entering");
-          setTimeout(() => bento.classList.remove("is-entering"), 1200);
-        }
-      }
-      requestScenes();
-    };
-    btns.forEach((b) => b.addEventListener("click", () => setView(b.dataset.view, true)));
-
-    renderJourney();
     renderBento();
-    setView(view, false);
-    let wasStatic = isStatic, wasNarrow = innerWidth < 1080;
-    addEventListener("resize", () => {
-      place();
-      const narrow = innerWidth < 1080;
-      if ((reduce || mobile()) !== wasStatic || narrow !== wasNarrow) {
-        wasStatic = reduce || mobile(); wasNarrow = narrow;
-        renderJourney();
-      } else if (view === "journey") renderRuler();
-      requestScenes();
-    });
-    fontsReady().then(place);
   }
 
   /* ------------------------------------------------------------------
@@ -1146,76 +550,6 @@
     const total = r.height - innerHeight;
     return total > 0 ? clamp(-r.top / total) : 0;
   };
-
-  function scenePhilosophy() {
-    const sec = $(".philo");
-    if (!sec) return;
-    const statements = $$(".philo__statement", sec);
-    const labels = $$(".philo__label", sec);
-    sec.style.setProperty("--n", statements.length);
-    const words = statements.map((s) => {
-      s.dataset.label = labels[statements.indexOf(s)]?.textContent || "";
-      const text = s.textContent.trim();
-      s.setAttribute("aria-label", text);
-      s.innerHTML = text.split(/\s+/).map((w) => `<span class="w" aria-hidden="true">${esc(w)}</span>`).join(" ");
-      return $$(".w", s);
-    });
-    if (reduce) return;
-    const num = $(".philo__num", sec);
-    let shownIdx = -1;
-    scenes.push(() => {
-      if (mobile()) return;
-      const p = sectionProgress(sec);
-      const n = statements.length;
-      const seg = p * n;
-      const idx = Math.min(n - 1, Math.floor(seg));
-      const local = clamp((seg - idx) * 1.3);
-      statements.forEach((s, i) => s.classList.toggle("is-active", i === idx));
-      labels.forEach((l, i) => {
-        l.classList.toggle("is-active", i === idx);
-        l.style.setProperty("--lp", i < idx ? 1 : i === idx ? local : 0);
-      });
-      const ws = words[idx];
-      const on = Math.round(local * ws.length);
-      ws.forEach((w, k) => { w.classList.toggle("is-on", k < on); w.classList.toggle("is-tip", k === on - 1 && on < ws.length); });
-      if (idx !== shownIdx) {
-        shownIdx = idx;
-        sec.style.setProperty("--now", statements[idx].style.getPropertyValue("--pc") || "var(--acc-500)");
-        if (num) num.textContent = String(idx + 1).padStart(2, "0");
-      }
-    });
-  }
-
-  function sceneChapters() {
-    const sec = $(".chapters");
-    if (!sec) return;
-    const chapters = $$(".chapter", sec);
-    const n = chapters.length;
-    sec.style.setProperty("--n", n);
-    if (reduce) return;
-    const elev = $$("[data-elev]", sec).map((el) => [el, el.closest(".chapter")]);
-    const paths = $$(".chapter [data-path]", sec).map((el) => [el, el.closest(".chapter")]);
-    scenes.push(() => {
-      const p = sectionProgress(sec);
-      const pos = p * (n - 1);
-      // effects progress: starts as the section scrolls in, so chapter one plays too
-      const r = sec.getBoundingClientRect();
-      const posX = pos + clamp((innerHeight - r.top) / innerHeight) - 1;
-      chapters.forEach((c, i) => c.style.setProperty("--cp", clamp((posX - i + 0.8) / 0.8).toFixed(3)));   // plays as the card rises, done as it lands
-      paths.forEach(([el, c]) => follow(el, clamp(((parseFloat(c.style.getPropertyValue("--cp")) || 0) - 0.1) / 0.85)));
-      elev.forEach(([el, c]) => {
-        const cp = parseFloat(c.style.getPropertyValue("--cp")) || 0;
-        el.textContent = Math.round(clamp((cp - 0.08) / 0.62) * +el.dataset.elev).toLocaleString("en-GB");
-      });
-      const ins = chapters.map((c, i) => (i === 0 ? 1 : ease(clamp((pos - (i - 1) - 0.1) / 0.75))));
-      chapters.forEach((c, i) => {
-        c.style.setProperty("--in", ins[i].toFixed(4));
-        c.style.setProperty("--out", (ins[i + 1] || 0).toFixed(4));
-        c.style.zIndex = i + 1;
-        c.setAttribute("aria-hidden", String(!(ins[i] > 0.5 && (ins[i + 1] || 0) < 0.5)));
-      });
-    });
-  }
 
   /* ------------------------------------------------------------------
      Process loop: each step is a little scene the reader "performs"
@@ -1778,41 +1112,9 @@
   }
 
   /* ------------------------------------------------------------------
-     Swatches: click to copy hex
+     Small things: footer year
   ------------------------------------------------------------------ */
-  let toastEl, toastT;
-  function toast(msg, colour) {
-    if (!toastEl) {
-      toastEl = d.createElement("div");
-      toastEl.className = "toast";
-      toastEl.setAttribute("role", "status");
-      d.body.appendChild(toastEl);
-    }
-    toastEl.innerHTML = (colour ? `<i style="background:${esc(colour)}"></i>` : "") + "<span></span>";
-    toastEl.lastChild.textContent = msg;
-    toastEl.classList.add("is-on");
-    clearTimeout(toastT);
-    toastT = setTimeout(() => toastEl.classList.remove("is-on"), 1800);
-  }
-  function initSwatches() {
-    $$(".swatch[data-hex]").forEach((s) => {
-      s.addEventListener("click", async () => {
-        const hex = s.dataset.hex;
-        try { await navigator.clipboard.writeText(hex); toast(`Copied ${hex}`, hex); }
-        catch (e) { toast(hex, hex); }
-      });
-    });
-  }
-
-  /* ------------------------------------------------------------------
-     Small things: UK clock, year
-  ------------------------------------------------------------------ */
-  function initClock() {
-    const els = $$("[data-clock]");
-    if (!els.length) return;
-    const fmt = new Intl.DateTimeFormat("en-GB", { hour: "2-digit", minute: "2-digit", timeZone: "Europe/London" });
-    const tick = () => els.forEach((e) => (e.textContent = fmt.format(new Date())));
-    tick(); setInterval(tick, 30000);
+  function initYear() {
     $$("[data-year]").forEach((e) => (e.textContent = new Date().getFullYear()));
   }
 
@@ -1828,21 +1130,14 @@
   initHero();
   initAboutHero();
   initAboutCanvas();
-  initChapterFx();
-  initSnap();
-  initRing();
-  initWinter();
   initWork();
   initWorks();
   initCase();
   initGalleries();
   initLightbox();
-  initSwatches();
   initReveals();
-  initClock();
+  initYear();
 
-  scenePhilosophy();
-  sceneChapters();
   sceneLoop();
   sceneCover();
   sceneContact();
