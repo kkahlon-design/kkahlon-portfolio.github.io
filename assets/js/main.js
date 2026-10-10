@@ -18,10 +18,6 @@
   const reduce = matchMedia("(prefers-reduced-motion: reduce)").matches;
   const fine = matchMedia("(hover: hover) and (pointer: fine)").matches;
   const mobile = () => innerWidth <= 820;
-  const store = {
-    get(k) { try { return localStorage.getItem(k); } catch (e) { return null; } },
-    set(k, v) { try { localStorage.setItem(k, v); } catch (e) {} }
-  };
 
   const ICON = {
     ne: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 17 17 7M9 7h8v8"/></svg>',
@@ -46,43 +42,6 @@
   }
   window.__kkMissing = markMissing;
   (window.__kkQueue || []).forEach(markMissing);
-
-  /* ------------------------------------------------------------------
-     Theme toggle with circular reveal from the button
-  ------------------------------------------------------------------ */
-  function currentTheme() {
-    return root.dataset.theme || (matchMedia("(prefers-color-scheme: light)").matches ? "light" : "dark");
-  }
-  function applyTheme(t) {
-    root.dataset.theme = t;
-    store.set("kk-theme", t);
-    $$("[data-theme-toggle]").forEach((b) => {
-      b.setAttribute("aria-label", t === "dark" ? "Switch to light mode" : "Switch to dark mode");
-    });
-    const meta = $('meta[name="theme-color"]');
-    if (meta) meta.content = t === "dark" ? "#000000" : "#FFFFFF";
-  }
-  function initTheme() {
-    applyTheme(currentTheme());
-    $$("[data-theme-toggle]").forEach((btn) => {
-      btn.addEventListener("click", () => {
-        const next = currentTheme() === "dark" ? "light" : "dark";
-        if (!d.startViewTransition || reduce) return applyTheme(next);
-        const r = btn.getBoundingClientRect();
-        const x = r.left + r.width / 2, y = r.top + r.height / 2;
-        const rad = Math.hypot(Math.max(x, innerWidth - x), Math.max(y, innerHeight - y));
-        root.classList.add("theme-switching");
-        const vt = d.startViewTransition(() => applyTheme(next));
-        vt.ready.then(() => {
-          root.animate(
-            { clipPath: [`circle(0px at ${x}px ${y}px)`, `circle(${rad}px at ${x}px ${y}px)`] },
-            { duration: 750, easing: "cubic-bezier(0.76, 0, 0.24, 1)", pseudoElement: "::view-transition-new(root)" }
-          );
-        }).catch(() => {});
-        vt.finished.finally(() => root.classList.remove("theme-switching"));
-      });
-    });
-  }
 
   /* ------------------------------------------------------------------
      Nav: solid on scroll. On desktop it hides on scroll down and returns
@@ -432,7 +391,7 @@
     if (!host || !window.PROJECTS) return;
     const CATS = window.CATEGORIES || [];
     const catOf = (p) => CATS.find((c) => c.id === p.category);
-    const NE = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 17 17 7M9 7h8v8"/></svg>';
+    const E = ICON.e;
     const featured = window.PROJECTS.filter((p) => p.featured);
     host.innerHTML = featured.map((p) => {
       if (p.status === "soon") {
@@ -446,14 +405,14 @@
       }
       const c = catOf(p) || { label: "Project", colour: "#3D4BFF" };
       return `<article class="pcard" style="--c:${esc(c.colour)}"><a class="pcard__link" href="${esc(p.href)}">
+        <div class="pcard__media">${imgTag(p)}</div>
         <div class="pcard__body">
           <p class="pcard__meta"><span class="pcard__cat"><i></i>${esc(c.label)}</span><span>${esc(p.year)}</span></p>
           <h3 class="pcard__title">${esc(p.title)}</h3>
           <p class="pcard__lede">${esc(p.summary)}</p>
           <p class="pcard__facts">${esc(p.role)} · ${esc(p.duration)}</p>
-          <span class="pcard__cta">View case study ${NE}</span>
+          <span class="pcard__cta">View case study ${E}</span>
         </div>
-        <div class="pcard__media">${imgTag(p)}</div>
       </a></article>`;
     }).join("");
     // fade each card up as it arrives
@@ -755,14 +714,18 @@
     const text = title.textContent.trim();
     const parts = text.split(/\s+/);
     title.setAttribute("aria-label", text);
-    // the last two words carry the colour ("worth solving?")
-    title.innerHTML = parts.map((w, i) => `<span class="cw${i >= parts.length - 2 ? " cw--accent" : ""}" aria-hidden="true">${esc(w)}</span>`).join(" ");
+    // the last two words carry the colour ("worth solving?"), as one gradient so they always match
+    const word = (w) => `<span class="cw" aria-hidden="true">${esc(w)}</span>`;
+    title.innerHTML = parts.slice(0, -2).map(word).join(" ") + ` <span class="cw-accent">${parts.slice(-2).map(word).join(" ")}</span>`;
     const words = $$(".cw", title);
     if (reduce) { words.forEach((w) => w.classList.add("is-on")); return; }
     scenes.push(() => {
       const r = title.getBoundingClientRect();
       if (r.top > innerHeight || r.bottom < 0) return;
-      const p = clamp((innerHeight * 0.92 - r.top) / (innerHeight * 0.45));
+      // finishes once the title is a third of the way up, or at the bottom of the page
+      // (on tall phones the page can end before the title gets that far)
+      const atEnd = scrollY + innerHeight >= root.scrollHeight - 4;
+      const p = atEnd ? 1 : clamp((innerHeight * 0.92 - r.top) / (innerHeight * 0.3));
       const on = Math.round(p * words.length);
       words.forEach((w, k) => w.classList.toggle("is-on", k < on));
     });
@@ -1121,7 +1084,6 @@
   /* ------------------------------------------------------------------
      Boot
   ------------------------------------------------------------------ */
-  initTheme();
   initMenu();
   initCursor();
   initMagnetic();
