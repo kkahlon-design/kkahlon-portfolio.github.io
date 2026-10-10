@@ -1,6 +1,6 @@
 /* ==========================================================================
    PROJECTS — one list that powers the home "Selected work" cards
-   and the Work page (timeline journey + bento grid).
+   and the Work page (bento grid).
 
    To add a new case study:
    1. Duplicate one of the "live" objects below and fill it in.
@@ -8,14 +8,14 @@
    3. Create the page (copy sfd-project.html as a starting point) and set `href`.
    4. Set `category` to one of the ids in CATEGORIES, and `start`/`end`
       as "YYYY-MM" (end can be left out for a short project).
-   5. Delete one of the "soon" placeholders if you want fewer of them.
+   5. Delete the "soon" placeholder once you no longer need it.
 
    status: "live" = clickable case study, "soon" = placeholder card.
    featured: true = shows as a card in the home page "Selected work" (keep it to 2–4).
-   tags: a few short skills shown as chips on the card.
+   tags: a few short skills (not shown on the cards right now, kept for reference).
    ========================================================================== */
 
-/* Project types. Each colours its timeline and acts as the key on the Work page.
+/* Project types. Each has a colour that acts as the key on the Work page.
    A category only appears in the filter once it has at least one live project. */
 window.CATEGORIES = [
   { id: "website",  label: "Websites",          colour: "#3D4BFF" },
@@ -67,16 +67,6 @@ window.PROJECTS = [
     title: "Next case study",
     client: "In progress",
     summary: "I'm writing this one up now. Want an early look? Message me on LinkedIn.",
-    year: "2026",
-    memoji: "Images/Memoji/laptop.png"
-  },
-  {
-    status: "soon",
-    featured: false,
-    title: "Your project here",
-    client: "Open for work",
-    summary: "Have a product that people find confusing? That's the kind of problem I like.",
-    year: "Next",
-    memoji: "Images/Memoji/idea.png"
+    year: "2026"
   }
 ];
