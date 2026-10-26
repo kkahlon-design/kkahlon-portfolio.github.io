@@ -39,7 +39,7 @@ window.PROJECTS = [
     duration: "2 weeks",
     role: "Project lead",
     tags: ["Web design", "User research", "SEO"],
-    cover: "Images/SFDProject/Mockup/Landing.png",
+    cover: "Images/SFDProject/Live/01-homepage.webp",
     coverFallback: "",
     alt: "The redesigned Systems for Dentists homepage"
   },
