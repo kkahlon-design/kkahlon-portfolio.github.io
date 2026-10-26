@@ -619,7 +619,7 @@ a.pcard__link:hover .pcard__cta svg, a.pcard__link:focus-visible .pcard__cta svg
 .about-hero__memoji { z-index: 1; }
 .about-hero__frame {
   position: absolute; left: 50%; bottom: 0; z-index: 2;
-  height: min(66%, 600px); aspect-ratio: 872 / 1000; translate: -50% 0;
+  height: min(66%, 600px); aspect-ratio: 750 / 860; translate: -50% 0;
   border: 1.5px solid #fff; border-bottom: 0;
   pointer-events: auto;
 }
