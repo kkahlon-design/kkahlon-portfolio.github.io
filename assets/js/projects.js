@@ -57,9 +57,9 @@ window.PROJECTS = [
     duration: "9 months",
     role: "Solo designer",
     tags: ["User research", "Prototyping", "UI redesign"],
-    cover: "Images/UXDIProject/P2 Homepage.png",
+    cover: "Images/UXDIProject/v2/01-landing-page.webp",
     coverFallback: "Images/UXDIProject/Interaction Design.jpg",
-    alt: "The redesigned airline booking homepage"
+    alt: "The redesigned airline booking landing page"
   },
   {
     status: "soon",

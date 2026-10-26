@@ -27,7 +27,6 @@ A type only shows in the Work filter once it has a live project.
 - Images/SFDProject/Affinity.jpg
 - Images/SFDProject/Mockup/BookDemo.png, Features.png
 - Images/SFDProject/Revision/ (Landing1, DentistsTrustOurSoftware, Testimonials, BookDemo, SoftwareFeatures, PatientFeatures, ContactUs .png)
-- Images/UXDIProject/P1 *.png and P2 *.png screens (P2 Homepage.png is also the diploma cover)
 Open the browser console to see a list of any missing images on a page.
 
 ## Preview locally
